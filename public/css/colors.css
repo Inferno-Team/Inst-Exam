@@ -1,0 +1,21 @@
+:root {
+    --background-bottom-color: #dbe6fb;
+    --background-top-color: #afbed1;
+    --background-blueish1: #012bf8;
+    --background-blueish2: #1e4dab;
+    --background-brown: #90827a;
+    --background-black: #0d1914;
+}
+
+.inline-button {
+    background: var(--background-blueish1) !important;
+    border-color: var(--background-blueish2) !important;
+    width: 175px !important;
+    margin: auto;
+}
+
+.inline-button:hover {
+    background: var(--background-brown) !important;
+    border-color: var(--background-blueish1) !important;
+    color: var(--background-bottom-color) !important;
+}

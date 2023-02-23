@@ -17,6 +17,18 @@ class User extends Authenticatable
         'password',
         'type'
     ];
+    public function getToken()
+    {
+        $token = null;
+        if (isset($this->remember_token))
+            $token = $this->remember_token;
+        else {
+            $token = $this->createToken('authToken')->plainTextToken;
+            $this->remember_token = $token;
+            $this->save();
+        }
+        return $token;
+    }
     protected $hidden = [
         'password',
         'remember_token',

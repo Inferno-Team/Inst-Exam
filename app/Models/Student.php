@@ -11,10 +11,8 @@ class Student extends Model
     use HasFactory;
     protected $fillable = [
         'univ_id',
-        'name',
         'father_name',
         'mother_name',
-        'last_name',
         'birth_place',
         'gender',
         'field_number',

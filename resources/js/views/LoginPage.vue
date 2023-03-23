@@ -16,10 +16,10 @@
                             <label style="font-size: 14px;">اسم المستخدم :</label>
                         </b-col>
                         <b-col sm="7">
-                            <b-form-input :state="nameState" aria-describedby="name-live-feedback" v-model="user.name"
-                                type="text"></b-form-input>
+                            <b-form-input :state="nameState" autocomplete="off" aria-describedby="name-live-feedback"
+                                v-model="user.first_name" type="text"></b-form-input>
                             <b-form-invalid-feedback id="name-live-feedback">
-                                {{ errors['name'] == undefined ? '' : errors['name'][0] }}
+                                {{ errors['first_name'] == undefined ? '' : errors['first_name'][0] }}
                             </b-form-invalid-feedback>
                         </b-col>
                     </b-row>
@@ -28,8 +28,9 @@
                             <label style="font-size: 14px;">كلمة المرورة :</label>
                         </b-col>
                         <b-col sm="7">
-                            <b-form-input :state="passwordState" aria-describedby="password-live-feedback"
-                                v-model="user.password" type="password"></b-form-input>
+                            <b-form-input autocomplete="off" :state="passwordState"
+                                aria-describedby="password-live-feedback" v-model="user.password"
+                                type="password"></b-form-input>
                             <b-form-invalid-feedback id="password-live-feedback">
                                 {{ errors['password'] == undefined ? '' : errors['password'][0] }}
                             </b-form-invalid-feedback>
@@ -61,20 +62,20 @@ import { CONSTANCES } from '../utils';
 export default {
     computed: {
         nameState() {
-            return this.errors['name'] == undefined ? null : false;
+            return this.errors['first_name'] == undefined ? null : false;
         },
         passwordState() {
             return this.errors['password'] == undefined ? null : false;
         },
         errorStyle() {
-            if (this.errors['name'] != undefined || this.errors['password'] != undefined) {
+            if (this.errors['first_name'] != undefined || this.errors['password'] != undefined) {
                 return {
                     height: "480px"
                 }
             }
         },
         innerErrorStyle() {
-            if (this.errors['name'] != undefined || this.errors['password'] != undefined) {
+            if (this.errors['first_name'] != undefined || this.errors['password'] != undefined) {
                 return {
                     height: "330px"
                 }
@@ -102,8 +103,10 @@ export default {
                         return;
                     }
                     this.$toast.success('تم تسجيل الدخول');
-                    let token = response.data.login.token;
+                    let token = data.login.token;
+                    let userType = data.login.user.type;
                     localStorage.setItem(CONSTANCES.TOKEN_NAME, token);
+                    localStorage.setItem(CONSTANCES.USER_TYPE, userType);
                     window.axios.defaults.headers.common['authorization'] = `Bearer ${token}`;
                     this.$router.push({ name: 'home-page' });
                 })

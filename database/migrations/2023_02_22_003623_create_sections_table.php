@@ -18,11 +18,7 @@ class CreateSectionsTable extends Migration
             $table->id();
             $table->string('name');
             $table->timestamps();
-
         });
-        DB::table('sections')->insert([
-            'name' => 'علوم أساسية'
-        ]);
     }
 
     /**

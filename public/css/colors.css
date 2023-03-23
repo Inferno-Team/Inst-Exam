@@ -19,3 +19,21 @@
     border-color: var(--background-blueish1) !important;
     color: var(--background-bottom-color) !important;
 }
+
+
+.outline-button {
+    background: var(--background-brown) !important;
+    border-color: var(--background-brown) !important;
+    width: 175px !important;
+    margin: auto;
+}
+
+.outline-button:hover {
+    background: var(--background-top-color) !important;
+    border-color: var(--background-top-color) !important;
+    color: var(--background-black) !important;
+}
+
+.modal-content {
+    direction: rtl !important;
+}

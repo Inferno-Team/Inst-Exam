@@ -12,8 +12,7 @@ class UserController extends Controller
 {
     public function login(LoginRequest $request)
     {
-        $user = User::where('name', "like", $request->name)->first();
-        info($request);
+        $user = User::where('first_name', "like", $request->first_name)->first();
 
         if (!Hash::check($request->password, $user->password))
             return LocalResponse::returnError('البيانات غير متوافقة', 400, [

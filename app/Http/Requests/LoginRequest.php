@@ -28,21 +28,21 @@ class LoginRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' =>  'required|exists:users,name',
+            'first_name' =>  'required|exists:users,first_name',
             'password' =>  'required'
         ];
     }
     public function messages()
     {
         return [
-            'name.required' => 'اسم المستخدم يجب ان يكون موجود',
-            'name.exists' => 'اسم المستخدم غير موجود',
+            'first_name.required' => 'اسم المستخدم يجب ان يكون موجود',
+            'first_name.exists' => 'اسم المستخدم غير موجود',
             'password.required' => 'كلمة المرور يجب ان تكون موجودة',
 
         ];
     }
     protected function failedValidation(Validator $validator)
     {
-        throw new HttpResponseException(LocalResponse::returnError('', 401, $validator->errors()));
+        throw new HttpResponseException(LocalResponse::returnError('خطأ في تجسيل الدخول', 401, $validator->errors()));
     }
 }

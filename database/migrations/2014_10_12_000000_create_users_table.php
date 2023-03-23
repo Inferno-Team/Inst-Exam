@@ -17,19 +17,19 @@ class CreateUsersTable extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->unique();
+            $table->string('first_name')->unique();
+            $table->string('last_name')->nullable();
             $table->string('password');
-            $table->enum('type', ['super-admin', 'مشرف', 'مدير'])->default('مشرف');
+            $table->string('phone_number')->nullable()->unique();
+            $table->enum('type', [
+                'مشرف', 'مدير',
+                'طالب'
+            ])->default('طالب');
             $table->rememberToken();
             $table->timestamps();
         });
         DB::table('users')->insert([
-            'name' => 'super-admin',
-            'type' => 'super-admin',
-            'password' => Hash::make('super-admin1234'),
-        ]);
-        DB::table('users')->insert([
-            'name' => 'admin',
+            'first_name' => 'admin',
             'type' => 'مدير',
             'password' => Hash::make('admin1234'),
         ]);

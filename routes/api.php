@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\DateController;
 use App\Http\Controllers\ModeratorController;
+use App\Http\Controllers\StudentController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\YearController;
 use Illuminate\Http\Request;
@@ -27,4 +28,5 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/edit-moderator', [ModeratorController::class, 'editModerator']);
     Route::post('/remove-moderator', [ModeratorController::class, 'removeModerator']);
     Route::get('/get-years', [YearController::class, 'getYears']);
+    Route::get('/get_all_students/{year}', [StudentController::class, 'getAllStudent']);
 });

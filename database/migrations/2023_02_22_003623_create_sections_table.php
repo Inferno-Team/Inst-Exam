@@ -19,6 +19,11 @@ class CreateSectionsTable extends Migration
             $table->string('name');
             $table->timestamps();
         });
+        DB::table('sections')->insert([
+            'name' => 'تقانة المعلومات',
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
     }
 
     /**

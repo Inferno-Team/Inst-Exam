@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Student extends Model
 {
@@ -13,6 +14,7 @@ class Student extends Model
         'univ_id',
         'father_name',
         'mother_name',
+        'user_id',
         'birth_place',
         'gender',
         'field_number',
@@ -22,6 +24,10 @@ class Student extends Model
         'nationalty'
     ];
 
+    public function user(): HasOne{
+        return $this->hasOne(User::class,'user_id');
+    }
+
     public function courses(): HasMany
     {
         return $this->hasMany(Course::class, 'student_id');
@@ -30,8 +36,8 @@ class Student extends Model
     {
         return $this->hasMany(StudentStatus::class, 'student_id');
     }
-    public function years(): HasMany
+    public function year(): HasOne
     {
-        return $this->hasMany(StudentYear::class, 'student_id');
+        return $this->hasOne(StudentYear::class, 'student_id');
     }
 }

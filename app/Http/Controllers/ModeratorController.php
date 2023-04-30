@@ -29,7 +29,7 @@ class ModeratorController extends Controller
     }
     public function removeModerator(RemoveModeratorRequest $request)
     {
-        $user = User::find($request->id);
+        $user = User::find($request->id); // select * from users where user.id = ?
         if ($user->type != 'مشرف') {
             return LocalResponse::returnMessage('هذا الرقم ليس لمشرف', 400);
         }

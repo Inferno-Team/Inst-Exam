@@ -24,6 +24,9 @@ Vue.use(Toast, {
 
 });
 Vue.component('jw-pagination', JwPagination)
+
+
+
 const router = new VueRouter({
     mode: 'history',
     routes,
@@ -35,3 +38,4 @@ const app = new Vue({
     components: { App },
     router
 });
+

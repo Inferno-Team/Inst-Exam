@@ -4,6 +4,12 @@
         <div class="my-container">
             <router-view />
         </div>
+        <div class="floating-container">
+            <div class="floating-button" @click.prevent="logout">
+                <!-- <md-icon class="p-4">logout</md-icon> -->
+                <BIconArrowUpRightSquare variant="dark" style="margin-top: 10px;padding: 3px;"></BIconArrowUpRightSquare>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -25,26 +31,16 @@ export default {
     data() {
         return {
             menu: [
-                {
-                    header: false,
-                    title: "الصفحة الرئيسية",
-                    icon: "fa fa-bars",
-                    href: "/admin/",
-                },
+
                 {
                     title: "عرض كافة الطلاب",
                     icon: "fa fa-university",
-                    href: "/admin/all-student",
+                    href: "/admin/",
                 },
                 {
                     title: 'ادارة مشرفي السنوات',
                     icon: 'fa fa-shield',//<i class="fa-solid fa-user-shield"></i>
                     href: '/admin/moderator-crud',
-                },
-                {
-                    title: "إضافة مادة",
-                    icon: "fa fa-pencil-square-o",
-                    href: "/admin/add.course",
                 },
                 {
                     title: "تحديد تواريخ",
@@ -54,6 +50,13 @@ export default {
             ]
         }
     },
+    methods: {
+        logout() {
+            axios.defaults.headers.common['Authorization'] = ``;
+            localStorage.removeItem(CONSTANCES.TOKEN_NAME);
+            window.location.href = "/login";
+        }
+    }
 }
 </script>
 

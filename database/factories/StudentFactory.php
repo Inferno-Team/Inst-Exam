@@ -14,13 +14,13 @@ class StudentFactory extends Factory
      */
     public function definition()
     {
+
         return [
             'univ_id' => $this->faker->unique()->numberBetween(1_000, 10_000),
-
             'father_name' => $this->faker->firstNameMale(),
+            'last_name' => $this->faker->firstNameMale(),
             'mother_name' => $this->faker->firstNameFemale(),
             'birth_place' => $this->faker->address(),
-            'gender' => $this->sequence(['ذكر', 'انثى']),
             'field_number' => $this->faker->numberBetween(1, 30),
             'recruitment_division' => NULL,
             'city' => 'حلب',

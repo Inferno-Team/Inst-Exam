@@ -3,26 +3,33 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\AddModeratorRequest;
+use App\Http\Requests\moderators\AddNewCourseRequest;
 use App\Http\Requests\RemoveModeratorRequest;
 use Illuminate\Http\Request;
 use App\Http\Traits\LocalResponse;
 use App\Models\User;
-use App\Models\YearModerator;
+use App\Models\YearSectionModetator;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class ModeratorController extends Controller
 {
-    public function getAllModerators()
+    public function getAllModerators($section_id)
     {
-        $moderators = User::where('type', 'مشرف')->get()->map->moderatorFormating();
+        $moderators = User::where('type', 'مشرف')
+            ->whereHas('moderatedSectionYear', function ($query) use ($section_id) {
+                $query->where('section_id', $section_id);
+            })
+            ->get()->map->moderatorFormating();
         return LocalResponse::returnData('moderators', $moderators);
     }
     public function addModerator(AddModeratorRequest $request)
     {
         $moderator = User::create($request->values());
-        $yearModerator = YearModerator::create([
+        $yearModerator = YearSectionModetator::create([
             'moderator_id' => $moderator->id,
             'year_id' => $request->year_id,
+            'section_id' => $request->section_id,
         ]);
         $moderator->year = $yearModerator->yearFormation();
         return LocalResponse::returnData('moderator', $moderator, 'تم إنشاء المشرف بنجاح');
@@ -48,11 +55,12 @@ class ModeratorController extends Controller
                 $user->phone_number = $request->phone_number;
                 if (isset($request->password))
                     $user->password = Hash::make($request->password);
-                $moderatorYear = YearModerator::where('moderator_id', $user->id)->first();
+                $moderatorYear = YearSectionModetator::where('moderator_id', $user->id)->first();
                 $moderatorYear->delete();
                 $user->save();
-                YearModerator::create([
+                YearSectionModetator::create([
                     'moderator_id' => $user->id,
+                    'section_id' => $request->section_id,
                     'year_id' => $request->year_id,
                 ]);
                 $user = User::where('id', $request->id)->first()->moderatorFormating();
@@ -61,5 +69,10 @@ class ModeratorController extends Controller
             return LocalResponse::returnMessage('هذا المستخدم ليس بمشرف', 400);
         }
         return LocalResponse::returnMessage('لا يوجد مستخدم بهذا الرقم', 400);
+    }
+    public function addNewCourse(AddNewCourseRequest $request)
+    {
+        $user = Auth::user();
+        $year = $user->moderatedYear;
     }
 }

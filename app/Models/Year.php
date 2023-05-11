@@ -18,7 +18,7 @@ class Year extends Model
     }
     public function moderator(): HasOne
     {
-        $m = $this->hasOne(YearModerator::class, 'year_id');
+        $m = $this->hasOne(YearSectionModetator::class, 'year_id');
         return $m == null ? null : $m;
     }
     public function format()

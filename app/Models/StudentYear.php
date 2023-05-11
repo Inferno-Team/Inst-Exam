@@ -11,14 +11,14 @@ class StudentYear extends Model
     use HasFactory;
     protected $fillable  = [
         'student_id',
-        'section_year_term_id'
+        'section_year_id'
     ];
     public function student(): BelongsTo
     {
         return $this->belongsTo(Student::class, 'student_id');
     }
-    public function sectionYearTerm(): BelongsTo
+    public function sectionYear(): BelongsTo
     {
-        return $this->belongsTo(SectionYearTerm::class, 'section_year_term_id');
+        return $this->belongsTo(SectionYear::class, 'section_year_id');
     }
 }

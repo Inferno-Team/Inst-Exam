@@ -1,12 +1,12 @@
-
 import HomePage from './views/Home.vue'
 import LoginPage from './views/LoginPage.vue'
 import AdminPage from './views/AdminPage.vue'
 import ModeratorCRUD from './views/admin_pages/ModeratorCRUD.vue'
 import Dates from './views/admin_pages/Dates.vue'
 import EmptyPage from './layouts/EmptyPage.vue'
-export const routes = [
-    {
+import StudentYearSectionPage from './views/admin_pages/StudentYearSectionPage.vue'
+import SectionModerator from './views/admin_pages/SectionModerator.vue'
+export const routes = [{
         path: '/',
         name: 'home-page',
         component: HomePage
@@ -20,20 +20,22 @@ export const routes = [
         path: '/admin',
         component: AdminPage,
         children: [
+
             {
                 path: '',
                 name: 'admin-page',
-                component: EmptyPage
-            },
-            {
-                path: 'all-student',
-                name: 'all-student',
-                component: EmptyPage
+                component: StudentYearSectionPage
             },
             {
                 path: 'moderator-crud',
                 name: 'moderator-crud',
                 component: ModeratorCRUD
+            },
+            {
+                path: 'section/:id',
+                name: 'section',
+                props: true,
+                component: SectionModerator,
             },
             {
                 path: 'add.course',

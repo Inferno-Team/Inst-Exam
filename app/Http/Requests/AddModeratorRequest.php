@@ -33,7 +33,8 @@ class AddModeratorRequest extends FormRequest
             'last_name' => 'required',
             'phone_number' => 'required',
             'password' => 'required',
-            'year_id' => 'required|exists:years,id|unique:year_moderators,year_id'
+            'year_id' => 'required|exists:years,id',
+            'section_id' => 'required|exists:sections,id'
         ];
     }
     public function messages()
@@ -45,7 +46,8 @@ class AddModeratorRequest extends FormRequest
             'password.required' => 'هذا الحقل مطلوب',
             'year_id.required' => 'هذا الحقل مطلوب',
             'year_id.exists' => 'هذا الرقم يجب ان يكون ضمن جدول السنوات',
-            'year_id.unique' => 'هذه السنة تمتلك مشرف بالفعل',
+            'section_id.required' => 'هذا الحقل مطلوب',
+            'section_id.exists' => 'هذا الرقم يجب ان يكون ضمن جدول الاقسام',
         ];
     }
     protected function failedValidation(Validator $validator)

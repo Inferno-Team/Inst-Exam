@@ -20,9 +20,9 @@ class User extends Authenticatable
         'phone_number',
         'type'
     ];
-    public function moderatedYear(): HasOne
+    public function moderatedSectionYear(): HasOne
     {
-        return $this->hasOne(YearModerator::class, 'moderator_id');
+        return $this->hasOne(YearSectionModetator::class, 'moderator_id');
     }
     public function getToken()
     {
@@ -48,7 +48,7 @@ class User extends Authenticatable
             'first_name' => $this->first_name,
             'last_name' => $this->last_name,
             'phone_number' => $this->phone_number,
-            'year' => $this->moderatedYear == null ? null : $this->moderatedYear->yearFormation(),
+            'year' => $this->moderatedSectionYear == null ? null : $this->moderatedSectionYear->yearFormation(),
         ];
     }
     public function format()
@@ -59,4 +59,5 @@ class User extends Authenticatable
             'phone_number' => $this->phone_number,
         ];
     }
+
 }

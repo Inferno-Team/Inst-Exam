@@ -22,7 +22,7 @@ class CreateStudentStatusesTable extends Migration
                 'منقول',
                 'مستنفذ'
             ]);
-            $table->foreignId('section_year_term_id')->references('id')->on('section_year_terms')->cascadeOnDelete();
+            $table->foreignId('section_year_id')->references('id')->on('section_years')->cascadeOnDelete();
             $table->boolean('last_status')->default(true);
             $table->string('year_date');
             $table->timestamps();

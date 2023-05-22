@@ -8,6 +8,7 @@ export default {
 
     mounted() {
         const token = localStorage.getItem(CONSTANCES.TOKEN_NAME)
+
         if (token == null || token == undefined) {
             this.$router.push({
                 name: 'login-page'
@@ -18,6 +19,10 @@ export default {
         if (userType == TYPES.ADMIN) {
             this.$router.push({
                 name: 'admin-page'
+            });
+        } else if (userType == TYPES.MODERATOR) {
+            this.$router.push({
+                name: 'moderator-page'
             });
         } else {
             this.$toast.error(userType);

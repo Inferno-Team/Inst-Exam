@@ -1,7 +1,8 @@
 <template>
     <Tilt class="_card" :options="option">
-        <h3>{{ data.name }}</h3>
-        <div class="content">
+        <h3 v-if="index != -1">{{ data.name }}</h3>
+        <h1 v-else @click.prevent="move">+</h1>
+        <div class="content" v-if="index != -1">
             <h2>عرض كافة مديري السنوات لهذا القسم</h2>
             <a :id="index" @click.prevent="move">عرض</a>
         </div>
@@ -69,10 +70,16 @@ export default {
     opacity: 1;
 }
 
-._card h3 {
+._card h3,
+._card h1 {
     font-size: 1.4rem;
     color: rgb(1, 80, 249);
     z-index: 1;
+}
+
+._card h1 {
+    font-size: 3rem;
+    cursor: pointer;
 }
 
 ._card .content h2 {
@@ -86,7 +93,7 @@ export default {
     display: inline-block;
     padding: 10px;
     margin-top: 7px;
-    background: #fff;
+    background: white;
     text-decoration: none;
     font-weight: 500;
     border-radius: 20px;

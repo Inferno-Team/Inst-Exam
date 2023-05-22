@@ -7,8 +7,12 @@ use App\Http\Requests\moderators\AddNewCourseRequest;
 use App\Http\Requests\RemoveModeratorRequest;
 use Illuminate\Http\Request;
 use App\Http\Traits\LocalResponse;
+use App\Jobs\AddNewCourseJob;
+use App\Models\Course;
+use App\Models\SectionYearTerm;
 use App\Models\User;
 use App\Models\YearSectionModetator;
+use App\Models\YearTerm;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
@@ -73,6 +77,46 @@ class ModeratorController extends Controller
     public function addNewCourse(AddNewCourseRequest $request)
     {
         $user = Auth::user();
-        $year = $user->moderatedYear;
+        $year = $user->moderatedSectionYear->year;
+        $section = $user->moderatedSectionYear->section;
+        $yearTerm = YearTerm::where('year_id', $year->id)->where('name', 'LIKE', $request->tirm_name)->first();
+        if (!isset($yearTerm))
+            return LocalResponse::returnMessage('there is no year term with this data.', 401);
+        $section_year_term = SectionYearTerm::where('year_term_id', $yearTerm->id)->where('section_id', $section->id)->first();
+        if (!isset($section_year_term))
+            return LocalResponse::returnMessage('there is no section year term with this data.', 401);
+        $course = Course::create([
+            'name' => $request->name,
+            'section_year_term_id' => $section_year_term->id,
+        ]);
+        // AddNewCourseJob::dispatch($course,$section_year_term);
+        $this->dispatch(new AddNewCourseJob($course, $section_year_term));
+        return LocalResponse::returnMessage('this request will be handled shortly', 200);
+    }
+    public function myCourses()
+    {
+        $moderator = Auth::user();
+        $year = $moderator->moderatedSectionYear->year;
+        $section = $moderator->moderatedSectionYear->section;
+        $yearTerms = YearTerm::where('year_id', $year->id)->get();
+        $yearTermsIds = [];
+        foreach ($yearTerms as $yt)
+            $yearTermsIds[] = $yt->id;
+        $section_year_terms = SectionYearTerm::whereIn('year_term_id', $yearTermsIds)->where('section_id', $section->id)->get();
+        $ids = [];
+        foreach ($section_year_terms as $syt)
+            $ids[] = $syt->id;
+        $courses = Course::whereIn('section_year_term_id', $ids)->get()->map(function ($course) {
+            return (object)[
+                "ت" => $course->id,
+                "المادة" => $course->name,
+                "عدد الطلاب الكلي" => $course->students_count,
+                "عدد الطلاب اول مرة" => $course->first_time_count,
+                "عدد الطلاب الناجحين" => $course->sucessed_count,
+                "عدد الطلاب الراسبين" => $course->failed_count,
+
+            ];
+        });
+        return LocalResponse::returnData('courses', $courses);
     }
 }

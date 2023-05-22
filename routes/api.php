@@ -10,11 +10,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/user',function(Request $request){
+Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
-Route::get('error403',function(Request $request){
+Route::get('error403', function (Request $request) {
     return response()->json([
         'msg' => 'invlied token'
     ]);
@@ -34,6 +34,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/sections', [SectionController::class, 'getAllSections']);
     Route::post('/add-section', [SectionController::class, 'addSection']);
 
-    Route::post('/add-course',[ModeratorController::class,'addNewCourse']);
 
+    Route::get('/get-my-section-student', [\App\Http\Controllers\moderator\SectionController::class, 'getMySectionStudents']);
+    Route::post('/add_course', [ModeratorController::class, 'addNewCourse']);
+    Route::get('/my_courses', [ModeratorController::class, 'myCourses']);
 });

@@ -17,7 +17,7 @@ class SectionController extends Controller
     }
     public function getAllSections()
     {
-        return LocalResponse::returnData("sections", Section::all());
+        return LocalResponse::returnData("sections", Section::all()); // select * from sections
     }
     public function addSection(AddSectionRequest $request)
     {

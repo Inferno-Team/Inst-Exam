@@ -12,7 +12,7 @@ class StudentStatus extends Model
     protected $fillable = [
         'student_id',
         'status',
-        'section_year_term_id',
+        'section_year_id',
         'last_status',
         'year_date'
     ];

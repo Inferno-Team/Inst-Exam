@@ -13,6 +13,7 @@ import AddCoursePage from './views/moderator_pages/AddCoursePage.vue'
 import CoursePage from './views/moderator_pages/courses/CoursePage.vue'
 import AddMark1Page from './views/moderator_pages/courses/AddMark1Page.vue'
 import AddMark2Page from './views/moderator_pages/courses/AddMark2Page.vue'
+import AddNewStudentPage from './views/moderator_pages/AddNewStudentPage.vue'
 export const routes = [{
         path: '/',
         name: 'home-page',
@@ -70,9 +71,10 @@ export const routes = [{
                 component: CoursePage
             },
             {
-                path: 'add-mark1',
-                name: 'add-mark1',
-                component: AddMark1Page
+                path: 'add-mark1/:id',
+                name: 'add-mark-1',
+                component: AddMark1Page,
+                props: true
             },
             {
                 path: 'add-mark2',
@@ -83,6 +85,11 @@ export const routes = [{
                 path: 'generate-marks-report',
                 name: 'marks-report',
                 component: EmptyPage
+            },
+            {
+                path: 'add-student',
+                name: 'add-student',
+                component: AddNewStudentPage
             }
         ]
     }

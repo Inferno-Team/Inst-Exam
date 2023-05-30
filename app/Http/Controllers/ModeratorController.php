@@ -2,22 +2,37 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\AddModeratorRequest;
-use App\Http\Requests\moderators\AddNewCourseRequest;
-use App\Http\Requests\RemoveModeratorRequest;
-use Illuminate\Http\Request;
-use App\Http\Traits\LocalResponse;
-use App\Jobs\AddNewCourseJob;
-use App\Models\Course;
-use App\Models\SectionYearTerm;
 use App\Models\User;
-use App\Models\YearSectionModetator;
+use App\Models\Course;
 use App\Models\YearTerm;
+use Illuminate\Http\Request;
+use App\Jobs\AddNewCourseJob;
+use App\Models\SectionYearTerm;
+use App\Http\Traits\LocalResponse;
+use App\Jobs\InsertStudentMark1Job;
+use App\Models\YearSectionModetator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use App\Http\Requests\AddModeratorRequest;
+use App\Http\Requests\RemoveModeratorRequest;
+use App\Http\Requests\moderator\AddNewStudentRequest;
+use App\Http\Requests\moderators\AddNewCourseRequest;
+use App\Http\Requests\moderators\SaveStudentMarkRequest;
+use App\Jobs\InsertCoursesToNewStudents;
+use App\Models\SectionYear;
+use App\Models\Student;
+use App\Models\StudentYear;
+use Exception;
+use Illuminate\Support\Facades\DB;
 
 class ModeratorController extends Controller
 {
+    public function moderatorAccount()
+    {
+        $moderator = Auth::user();
+        $moderator->moderatedSectionYear = $moderator->moderatedSectionYear;
+        return LocalResponse::returnData('moderator', $moderator);
+    }
     public function getAllModerators($section_id)
     {
         $moderators = User::where('type', 'مشرف')
@@ -91,7 +106,7 @@ class ModeratorController extends Controller
         ]);
         // AddNewCourseJob::dispatch($course,$section_year_term);
         $this->dispatch(new AddNewCourseJob($course, $section_year_term));
-        return LocalResponse::returnMessage('this request will be handled shortly', 200);
+        return LocalResponse::returnMessage('سوف يتم إضافة هذه المادة قريبا', 200);
     }
     public function myCourses()
     {
@@ -106,17 +121,82 @@ class ModeratorController extends Controller
         $ids = [];
         foreach ($section_year_terms as $syt)
             $ids[] = $syt->id;
-        $courses = Course::whereIn('section_year_term_id', $ids)->get()->map(function ($course) {
+        $courses = Course::whereIn('section_year_term_id', $ids)->with('students')->get()->map(function ($course) {
             return (object)[
-                "ت" => $course->id,
-                "المادة" => $course->name,
-                "عدد الطلاب الكلي" => $course->students_count,
-                "عدد الطلاب اول مرة" => $course->first_time_count,
-                "عدد الطلاب الناجحين" => $course->sucessed_count,
-                "عدد الطلاب الراسبين" => $course->failed_count,
+                "id" => $course->id,
+                "course_name" => $course->name,
+                "all_students" => $course->students_count,
+                "first_time" => $course->first_time_count,
+                "passed" => $course->sucessed_count,
+                "faild" => $course->failed_count,
+                // check if this course have already mark1
+                "mark1_ava" => count($course->students->where('status', 'اول مرة')->whereNotNull('mark1')) == 0,
 
             ];
         });
         return LocalResponse::returnData('courses', $courses);
+    }
+    public function saveStudentMark1(SaveStudentMarkRequest $request)
+    {
+        $this->dispatch(new InsertStudentMark1Job($request->course_id, $request->marks));
+        return LocalResponse::returnMessage('سوف يتم إضافة هذه العلامات قريبا');
+    }
+
+    public function addNewStudent(AddNewStudentRequest $request)
+    {
+        try {
+            DB::beginTransaction();
+            $univ_id = $this->generate_univ_id();
+            $user = User::create([
+                'first_name' => $request->first_name,
+                'password' => Hash::make($univ_id),
+                'last_name' => $request->last_name,
+                'type' => 'طالب'
+            ]);
+            $student = Student::create([
+                'univ_id' => $univ_id,
+                'father_name' => $request->father_name,
+                'mother_name' => $request->mother_name,
+                'last_name' => $request->last_name,
+                'user_id' => $user->id,
+                'birth_place' => $request->birth_place,
+                'gender' => $request->gender,
+                'field_number' => $request->field_number,
+                'recruitment_division' => $request->recruitment_division,
+                'city' => $request->city,
+                'address' => $request->address,
+                'nationalty' => $request->nationalty
+            ]);
+            // section is this moderator section
+            $moderator = Auth::user();
+            $moderatedSectionYear = $moderator->moderatedSectionYear;
+            $section_year = SectionYear::where('section_id', $moderatedSectionYear->section_id)
+                ->where('year_id', $moderatedSectionYear->year_id)->first();
+            StudentYear::create([
+                'student_id' => $student->id,
+                'section_year_id' => $section_year->id,
+            ]);
+            $this->dispatch(new InsertCoursesToNewStudents($student->id, $section_year->id));
+            DB::commit();
+            return LocalResponse::returnData(
+                "student",
+                $student,
+                'تم انشاء الطالب بنجاح سوف يتم إضافة مواد السنة الاولى له بعد قليل'
+            );
+        } catch (Exception $e) {
+            DB::rollBack();
+            return LocalResponse::returnError($e->getMessage(), 400);
+        }
+    }
+    private function generate_univ_id(): int
+    {
+        while (true) {
+            $id = random_int(1000, 100_000);
+            // check if this id in database
+            $student = Student::where('id', $id)->first();
+            if (!isset($student)) {
+                return $id;
+            }
+        }
     }
 }

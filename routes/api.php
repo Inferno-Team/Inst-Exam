@@ -1,14 +1,14 @@
 <?php
 
+use Illuminate\Http\Request;
+use App\Http\Traits\LocalResponse;
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DateController;
-use App\Http\Controllers\ModeratorController;
-use App\Http\Controllers\SectionController;
-use App\Http\Controllers\StudentController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\YearController;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\SectionController;
+use App\Http\Controllers\StudentController;
+use App\Http\Controllers\ModeratorController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -19,7 +19,7 @@ Route::get('error403', function (Request $request) {
         'msg' => 'invlied token'
     ]);
 })->name('login');
-
+Route::get('permission_error', fn () => LocalResponse::returnMessage('لا تملك صلاحية الدخول على هذا الرابط'))->name('permission_error');
 Route::post('login', [UserController::class, 'login']);
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/set_dates', [DateController::class, 'setDates']);
@@ -34,8 +34,12 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/sections', [SectionController::class, 'getAllSections']);
     Route::post('/add-section', [SectionController::class, 'addSection']);
 
-
-    Route::get('/get-my-section-student', [\App\Http\Controllers\moderator\SectionController::class, 'getMySectionStudents']);
-    Route::post('/add_course', [ModeratorController::class, 'addNewCourse']);
-    Route::get('/my_courses', [ModeratorController::class, 'myCourses']);
+    Route::group(['middleware' => ['is_moderator']], function () {
+        Route::get('/get-my-section-student', [\App\Http\Controllers\moderator\SectionController::class, 'getMySectionStudents']);
+        Route::post('/add-new-student', [ModeratorController::class, 'addNewStudent']);
+        Route::post('/add_course', [ModeratorController::class, 'addNewCourse']);
+        Route::get('/my_courses', [ModeratorController::class, 'myCourses']);
+        Route::post('/save-student-mark1', [ModeratorController::class, 'saveStudentMark1']);
+        Route::post('moderator', [ModeratorController::class, 'moderatorAccount']);
+    });
 });

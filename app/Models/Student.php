@@ -22,7 +22,8 @@ class Student extends Model
         'recruitment_division',
         'city',
         'address',
-        'nationalty'
+        'nationalty',
+        'last_name',
     ];
 
     public function user()

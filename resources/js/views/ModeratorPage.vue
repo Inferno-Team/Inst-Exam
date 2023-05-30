@@ -26,7 +26,19 @@ export default {
             });
             return;
         }
-
+        axios.post('/api/moderator')
+            .then((response) => {
+                let data = response.data;
+                let moderatedSectionYear = data.moderator.moderatedSectionYear;
+                console.log(moderatedSectionYear);
+                if (moderatedSectionYear.year_id == 1) {
+                    this.menu.splice(1,0, {
+                        title: 'إضافة طالب',
+                        icon: 'fa  fa-user-plus',//<i class="fa-solid fa-user-shield"></i>
+                        href: '/moderator/add-student',
+                    });
+                }
+            })
     },
     data() {
         return {
@@ -36,15 +48,14 @@ export default {
                     title: "عرض كافة الطلاب",
                     icon: "fa fa-university",
                     href: "/moderator/",
-                },
-                {
+                }, {
                     title: 'إضافة مادة',
                     icon: 'fa fa-shield',//<i class="fa-solid fa-user-shield"></i>
                     href: '/moderator/add-course',
                 },
                 {
                     title: 'المواد',
-                    icon: 'fa fa-shield',//<i class="fa-solid fa-user-shield"></i>
+                    icon: 'fa fa-plus-square',//<i class="fa-solid fa-user-shield"></i>
                     href: '/moderator/courses',
                 },
                 /* {

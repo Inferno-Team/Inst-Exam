@@ -20,11 +20,12 @@ class SectionController extends Controller
         })->with('student')->get()->map(function ($s) {
             $student = $s->student;
             return (object)[
-                'ت' => $student->id,
-                'الاسم' => $student->user->first_name,
-                'اسم الأب' => $student->father_name,
-                'اسم الأم' => $student->mother_name,
-                'الكنية' => $student->last_name,
+                'id' => $student->id,
+                'first_name' => $student->user->first_name,
+                'univ_id' => $student->univ_id,
+                'father_name' => $student->father_name,
+                'mother_name' => $student->mother_name,
+                'last_name' => $student->last_name,
                 // 'phone_number' => $student->user->phone_number,
                 // 'gender' => $student->gender,
             ];

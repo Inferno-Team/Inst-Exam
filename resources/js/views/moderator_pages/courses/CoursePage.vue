@@ -1,8 +1,8 @@
 <template>
     <div class="bg-white m-3 p-3 rounded">
         <h4 class=""> المواد</h4>
-        <b-table @row-clicked="onCourseClicked" id="my-table" :per-page="perPage" :current-page="currentPage" striped hover
-            :items="courses"></b-table>
+        <b-table :fields="fields" @row-clicked="onCourseClicked" id="my-table" :per-page="perPage"
+            :current-page="currentPage" striped hover :items="courses"></b-table>
         <b-pagination class="mt-4" style="justify-content: center;" v-model="currentPage" :total-rows="rows"
             :per-page="perPage" aria-controls="my-table"></b-pagination>
 
@@ -44,22 +44,65 @@ export default {
             courses: [],
             selectedOption: null,
             selectedCourse: null,
-            options: [
+            options: [],
+            all_options: [
                 {
                     text: 'يرجى اختيار', value: null,
                 },
                 {
-                    text: 'إضافة علامة عملي', value: "add-mark1",
+                    text: 'إضافة علامة عملي', value: "add-mark-1",
                 },
                 {
                     text: 'إضافة علامة نظري', value: 'add-mark2',
                 },
+            ],
+            fields: [
+                {
+                    key: 'id',
+                    label: 'ت',
+                    sortable: true
+                },
+
+                {
+                    key: 'course_name',
+                    label: 'اسم المادة',
+                    sortable: true
+                },
+                {
+                    key: 'all_students',
+                    label: "عدد الطلاب الكلي",
+                    sortable: true
+                },
+                {
+                    key: 'first_time',
+                    label: "عدد الطلاب اول مرة",
+                    sortable: true
+                },
+                {
+                    key: 'passed',
+                    label: "عدد الطلاب الناجحين",
+                    sortable: true
+                },
+                {
+                    key: 'faild',
+                    label: "عدد الطلاب الراسبين",
+                    sortable: true
+                },
 
             ]
+
         }
     },
     methods: {
         onCourseClicked(course, index) {
+            if (course.mark1_ava) {
+                this.options = [...this.all_options];
+            }
+            else {
+                this.options = this.all_options.filter((item) => {
+                    return item.value != 'add-mark-1'
+                })
+            }
             this.$bvModal.show('marks-modal');
             this.selectedCourse = course;
         },
@@ -67,8 +110,9 @@ export default {
             this.$bvModal.hide('marks-modal')
             this.$router.push({
                 name: this.selectedOption,
+                // name: 'add-mark-1',
                 params: {
-                    courseId: this.selectedCourse.id
+                    id: this.selectedCourse.id
                 }
             });
         }
@@ -81,4 +125,8 @@ export default {
 }
 </script>
 
-<style scoped></style>
+<style >
+tr {
+    cursor: pointer;
+}
+</style>

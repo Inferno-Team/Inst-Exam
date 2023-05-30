@@ -4,7 +4,8 @@ import {
     IconsPlugin
 } from 'bootstrap-vue'
 import {
-    BIconArrowUpRightSquare
+    BIconArrowUpRightSquare,
+    BIconSave
 } from 'bootstrap-vue'
 // arrow-up-right-square
 import 'bootstrap/dist/css/bootstrap.css'

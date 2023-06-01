@@ -15,8 +15,8 @@
                         </b-col>
                     </b-row>
                     <b-row class="my-5" style="align-items: center;">
-                        <b-button :disabled="selectedOption == null" class="inline-button"
-                            @click.prevent="goToPage">انطلاق</b-button>
+                        <b-button :disabled="selectedOption == null" class="inline-button" @click.prevent="goToPage"
+                            :disable="options.size <= 1">انطلاق</b-button>
                         <b-button class="outline-button" @click.prevent="$bvModal.hide('marks-modal')">اغلاق</b-button>
                     </b-row>
 
@@ -95,6 +95,16 @@ export default {
     },
     methods: {
         onCourseClicked(course, index) {
+            if (!course.mark1_ava && !course.mark2_ava) {
+                this.options = [
+                    {
+                        text: 'تمت اضافة بيانات هذه السنة', value: null,
+                    }
+                ];
+                this.$bvModal.show('marks-modal');
+                this.selectedCourse = course;
+                return;
+            }
             if (course.mark1_ava) {
                 this.options = [...this.all_options];
             }

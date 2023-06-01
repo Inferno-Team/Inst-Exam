@@ -2,16 +2,17 @@
 
 namespace App\Jobs;
 
-use App\Models\SectionYear;
+use App\Models\Dates;
 use App\Models\Student;
-use App\Models\StudentCourse;
+use App\Models\SectionYear;
 use App\Models\StudentYear;
+use App\Models\StudentCourse;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
+use Illuminate\Queue\SerializesModels;
+use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Queue\SerializesModels;
+use Illuminate\Contracts\Queue\ShouldBeUnique;
 
 class AddNewCourseJob implements ShouldQueue
 {
@@ -47,10 +48,13 @@ class AddNewCourseJob implements ShouldQueue
         $students = Student::whereHas('year', function ($year) use ($section_year) {
             $year->where('section_year_id', $section_year->id);
         })->get();
+        $date = Dates::first();
         foreach ($students as $student) {
             $cs = StudentCourse::create([
                 'student_id' => $student->id,
                 'course_id' => $this->course->id,
+                'year' => $date == null ? null : $date->year,
+
             ]);
             $studentsCount++;
         }

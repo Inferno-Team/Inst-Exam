@@ -92,12 +92,12 @@
                 </b-col>
                 <b-col>
 
-                    <b-row class="my-3">
+                    <b-row class="my-3" >
                         <b-col sm="5">
                             <label style="font-size: 14px;">شعبة التجنيد :</label>
                         </b-col>
                         <b-col sm="7">
-                            <b-form-input autocomplete="off" v-model="new_student.recruitment_division"
+                            <b-form-input :disabled="new_student.gender == 'انثى'" autocomplete="off" v-model="new_student.recruitment_division"
                                 type="text"></b-form-input>
                         </b-col>
                     </b-row>

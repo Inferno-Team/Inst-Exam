@@ -32,6 +32,7 @@ class CreateDatesTable extends Migration
                 'final-exam',
                 'summer-holiday',
             ])->nullable();
+            $table->string('year')->nullable();
             $table->timestamps();
         });
     }

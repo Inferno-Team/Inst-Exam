@@ -20,7 +20,8 @@ class CreateStudentStatusesTable extends Migration
                 'ناجح',
                 'راسب',
                 'منقول',
-                'مستنفذ'
+                'مستنفذ',
+                'خريج',
             ]);
             $table->foreignId('section_year_id')->references('id')->on('section_years')->cascadeOnDelete();
             $table->boolean('last_status')->default(true);

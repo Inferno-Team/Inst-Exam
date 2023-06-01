@@ -50,6 +50,11 @@ export const routes = [{
                 path: '/admin/dates',
                 component: Dates
             },
+             {
+                name: 'change-student-status',
+                path: '/admin/change-student-status',
+            },
+
         ]
     },
     {
@@ -77,9 +82,10 @@ export const routes = [{
                 props: true
             },
             {
-                path: 'add-mark2',
+                path: 'add-mark2/:id',
                 name: 'add-mark2',
-                component: AddMark2Page
+                component: AddMark2Page,
+                props: true
             },
             {
                 path: 'generate-marks-report',

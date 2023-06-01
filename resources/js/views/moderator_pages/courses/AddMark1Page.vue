@@ -101,8 +101,10 @@ export default {
 
             })
                 .then((res) => {
-                    if (res.data.code == 200)
+                    if (res.data.code == 200) {
                         this.$toast.success(res.data.msg);
+                        this.$router.back();
+                    }
                     else {
                         this.$toast.warning(res.data.msg);
                         console.log(res.data.errors);

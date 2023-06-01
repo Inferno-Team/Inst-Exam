@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Models\Course;
+use App\Models\Dates;
 use App\Models\SectionYear;
 use App\Models\SectionYearTerm;
 use App\Models\StudentCourse;
@@ -45,16 +46,18 @@ class InsertCoursesToNewStudents implements ShouldQueue
                 $yearTerm->where('year_id', $sectionYear->year_id);
             })->get();
         $ts = [];
-        for ($i=0; $i < count($terms); $i++) {
+        for ($i = 0; $i < count($terms); $i++) {
             // [1,2]
-            $ts[]=$terms[$i]->id;
+            $ts[] = $terms[$i]->id;
         }
         $courses = Course::whereIn('section_year_term_id', $ts)->get();
         $c = 0;
+        $date = Dates::first();
         foreach ($courses as $course) {
             $cs = StudentCourse::create([
                 'student_id' => $this->student_id,
                 'course_id' => $course->id,
+                'year' => $date == null ? null : $date->year,
             ]);
             $c += 1;
         }

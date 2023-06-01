@@ -16,6 +16,7 @@ class Dates extends Model
         'second_tirm_end',
         'second_tirm_exam_end',
         'next_year_first_tirm_start',
-        'current'
+        'current',
+        'year',
     ];
 }

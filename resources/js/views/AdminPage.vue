@@ -1,6 +1,6 @@
 <template>
     <div class="dashboard">
-        <sidebar-menu :menu="menu" :rtl="true" :relative="true" />
+        <sidebar-menu :menu="menu" @item-click="onItemClick" :rtl="true" :relative="true" />
         <div class="my-container">
             <router-view />
         </div>
@@ -10,6 +10,22 @@
                 <BIconArrowUpRightSquare variant="dark" style="margin-top: 10px;padding: 3px;"></BIconArrowUpRightSquare>
             </div>
         </div>
+        <b-modal id="marks-modal" hide-footer title="تغيير حالة الطلاب">
+            <div class="mx-auto">
+                <b-container fluid>
+                    <b-row class="my-3" style="justify-content: center;">
+                        <b-col sm="7">
+                            <p>هل تريد ان تغير حالة الطلاب ؟</p>
+                        </b-col>
+                    </b-row>
+                    <b-row class="my-5" style="align-items: center;">
+                        <b-button class="inline-button" @click.prevent="goToPage">انطلاق</b-button>
+                        <b-button class="outline-button" @click.prevent="$bvModal.hide('marks-modal')">اغلاق</b-button>
+                    </b-row>
+
+                </b-container>
+            </div>
+        </b-modal>
     </div>
 </template>
 
@@ -26,6 +42,18 @@ export default {
             });
             return;
         }
+        axios.get('/api/dates')
+            .then((res) => {
+                let date = res.data.date;
+                console.log(date.current);
+                if (date.current == 'summer-holiday') {
+                    this.menu.push({
+                        title: "تغيير حالة الطلاب",
+                        icon: "fa fa-clock-o",
+                    },);
+                }
+            })
+            .catch(console.error);
 
     },
     data() {
@@ -47,6 +75,7 @@ export default {
                     icon: "fa fa-clock-o",
                     href: "/admin/dates",
                 },
+
             ]
         }
     },
@@ -55,6 +84,27 @@ export default {
             axios.defaults.headers.common['Authorization'] = ``;
             localStorage.removeItem(CONSTANCES.TOKEN_NAME);
             window.location.href = "/login";
+        },
+        onItemClick(event, item, node) {
+
+            if (item.title === "تغيير حالة الطلاب") {
+                this.$bvModal.show('marks-modal')
+                axios.post('/api/change-student-status')
+                    .then((res) => {
+                        let data = res.data;
+                        if (data.code == 200)
+                            this.$toast.success(msg);
+                        else
+                            this.$toast.warring(msg);
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                        this.$toast.error('حدث خطأ ما');
+                    })
+            }
+        },
+        goToPage() {
+            this.$bvModal.hide('marks-modal')
         }
     }
 }

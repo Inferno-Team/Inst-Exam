@@ -25,7 +25,7 @@ class Course extends Model
     public function studentsCount(): Attribute
     {
         return new Attribute(
-            get: fn () => count($this->students) - $this->sucessed_count
+            get: fn () => count($this->students) //- $this->sucessed_count
         );
     }
     public function sucessedCount(): Attribute

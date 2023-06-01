@@ -33,6 +33,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/get_all_students/{section}/{year}', [StudentController::class, 'getAllStudent']);
     Route::get('/sections', [SectionController::class, 'getAllSections']);
     Route::post('/add-section', [SectionController::class, 'addSection']);
+    Route::post('/change-student-status', [StudentController::class, 'changeStudentsStatus']);
 
     Route::group(['middleware' => ['is_moderator']], function () {
         Route::get('/get-my-section-student', [\App\Http\Controllers\moderator\SectionController::class, 'getMySectionStudents']);
@@ -40,6 +41,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::post('/add_course', [ModeratorController::class, 'addNewCourse']);
         Route::get('/my_courses', [ModeratorController::class, 'myCourses']);
         Route::post('/save-student-mark1', [ModeratorController::class, 'saveStudentMark1']);
+        Route::post('/save-student-mark2', [ModeratorController::class, 'saveStudentMark2']);
         Route::post('moderator', [ModeratorController::class, 'moderatorAccount']);
     });
 });

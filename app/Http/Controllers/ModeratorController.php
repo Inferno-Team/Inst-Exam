@@ -2,28 +2,30 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
 use App\Models\User;
 use App\Models\Course;
+use App\Models\Student;
 use App\Models\YearTerm;
+use App\Models\SectionYear;
+use App\Models\StudentYear;
 use Illuminate\Http\Request;
 use App\Jobs\AddNewCourseJob;
 use App\Models\SectionYearTerm;
 use App\Http\Traits\LocalResponse;
+use Illuminate\Support\Facades\DB;
 use App\Jobs\InsertStudentMark1Job;
+use App\Jobs\InsertStudentMark2Job;
 use App\Models\YearSectionModetator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use App\Jobs\InsertCoursesToNewStudents;
 use App\Http\Requests\AddModeratorRequest;
 use App\Http\Requests\RemoveModeratorRequest;
 use App\Http\Requests\moderator\AddNewStudentRequest;
 use App\Http\Requests\moderators\AddNewCourseRequest;
+use App\Http\Requests\moderator\SaveStudentMark2Request;
 use App\Http\Requests\moderators\SaveStudentMarkRequest;
-use App\Jobs\InsertCoursesToNewStudents;
-use App\Models\SectionYear;
-use App\Models\Student;
-use App\Models\StudentYear;
-use Exception;
-use Illuminate\Support\Facades\DB;
 
 class ModeratorController extends Controller
 {
@@ -121,6 +123,7 @@ class ModeratorController extends Controller
         $ids = [];
         foreach ($section_year_terms as $syt)
             $ids[] = $syt->id;
+
         $courses = Course::whereIn('section_year_term_id', $ids)->with('students')->get()->map(function ($course) {
             return (object)[
                 "id" => $course->id,
@@ -130,7 +133,12 @@ class ModeratorController extends Controller
                 "passed" => $course->sucessed_count,
                 "faild" => $course->failed_count,
                 // check if this course have already mark1
-                "mark1_ava" => count($course->students->where('status', 'اول مرة')->whereNotNull('mark1')) == 0,
+                "mark1_ava" => count($course->students->filter(function ($student) {
+                    return $student->this_year_ava_mark1;
+                })) > 0,
+                "mark2_ava" => count($course->students->filter(function ($student) {
+                    return $student->this_year_ava_mark2;
+                })) > 0,
 
             ];
         });
@@ -139,6 +147,11 @@ class ModeratorController extends Controller
     public function saveStudentMark1(SaveStudentMarkRequest $request)
     {
         $this->dispatch(new InsertStudentMark1Job($request->course_id, $request->marks));
+        return LocalResponse::returnMessage('سوف يتم إضافة هذه العلامات قريبا');
+    }
+    public function saveStudentMark2(SaveStudentMark2Request $request)
+    {
+        $this->dispatch(new InsertStudentMark2Job($request->course_id, $request->marks));
         return LocalResponse::returnMessage('سوف يتم إضافة هذه العلامات قريبا');
     }
 

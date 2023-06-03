@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class SectionYear extends Model
@@ -18,9 +19,9 @@ class SectionYear extends Model
         return $this->belongsToMany(Student::class, 'student_years', 'section_year_id', 'student_id', null, 'id')
             ->with('user');
     }
-    public function year(): HasOne
+    public function year(): BelongsTo
     {
-        return $this->hasOne(Year::class, 'id');
+        return $this->belongsTo(Year::class, 'year_id');
     }
     public function format()
     {

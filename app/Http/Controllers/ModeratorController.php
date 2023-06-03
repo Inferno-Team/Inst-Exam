@@ -25,6 +25,7 @@ use App\Http\Requests\RemoveModeratorRequest;
 use App\Http\Requests\moderator\AddNewStudentRequest;
 use App\Http\Requests\moderators\AddNewCourseRequest;
 use App\Http\Requests\moderator\SaveStudentMark2Request;
+use App\Http\Requests\moderators\GetStudentMark1;
 use App\Http\Requests\moderators\SaveStudentMarkRequest;
 
 class ModeratorController extends Controller
@@ -153,6 +154,20 @@ class ModeratorController extends Controller
     {
         $this->dispatch(new InsertStudentMark2Job($request->course_id, $request->marks));
         return LocalResponse::returnMessage('سوف يتم إضافة هذه العلامات قريبا');
+    }
+    public function getStudentMark1(GetStudentMark1 $request)
+    {
+        $marks = Student::whereIn('univ_id', $request->ids)->whereHas(
+            'courses',
+            fn ($course) => $course->course_id = $request->course_id
+        )->get()->map(function ($student) {
+            return (object)[
+                'id' => $student->id,
+                'univ_id' => $student->univ_id,
+                'mark1' => $student->courses[0]->mark1,
+            ];
+        });
+        return LocalResponse::returnData('marks', $marks);
     }
 
     public function addNewStudent(AddNewStudentRequest $request)

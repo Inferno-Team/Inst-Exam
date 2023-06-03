@@ -86,25 +86,25 @@ export default {
             window.location.href = "/login";
         },
         onItemClick(event, item, node) {
-
             if (item.title === "تغيير حالة الطلاب") {
                 this.$bvModal.show('marks-modal')
-                axios.post('/api/change-student-status')
-                    .then((res) => {
-                        let data = res.data;
-                        if (data.code == 200)
-                            this.$toast.success(msg);
-                        else
-                            this.$toast.warring(msg);
-                    })
-                    .catch((error) => {
-                        console.log(error);
-                        this.$toast.error('حدث خطأ ما');
-                    })
             }
         },
         goToPage() {
-            this.$bvModal.hide('marks-modal')
+            axios.post('/api/change-student-status')
+                .then((res) => {
+                    let data = res.data;
+                    if (data.code == 200)
+                        this.$toast.success(data.msg);
+                    else
+                        this.$toast.warring(data.msg);
+                    this.$bvModal.hide('marks-modal')
+
+                })
+                .catch((error) => {
+                    console.log(error);
+                    this.$toast.error('حدث خطأ ما');
+                })
         }
     }
 }

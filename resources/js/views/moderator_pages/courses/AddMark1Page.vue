@@ -91,14 +91,13 @@ export default {
         },
         saveStudentsMarks() {
             axios.post('/api/save-student-mark1', {
-                course_id: this.id,
-                marks: this.students.map((student) => {
+                course_id : this.id,
+                marks:this.students.map(function(item){
                     return {
-                        univ_id: student.univ_id,
-                        mark: student.mark
+                        univ_id : item.univ_id,
+                        mark : item.mark
                     }
-                }),
-
+                })
             })
                 .then((res) => {
                     if (res.data.code == 200) {

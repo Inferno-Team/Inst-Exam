@@ -36,7 +36,7 @@ class StudentCourse extends Model
         return new Attribute(
             get: function () {
                 $ava = $this->this_year_ava;
-                return $ava && $this->mark1 == null;
+                return $ava && $this->mark1 === null;
             }
         );
     }
@@ -45,7 +45,7 @@ class StudentCourse extends Model
         return new Attribute(
             get: function () {
                 $ava = $this->this_year_ava;
-                return $ava && $this->mark2 == null;
+                return $ava && $this->mark2 === null;
             }
         );
     }

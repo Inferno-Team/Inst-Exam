@@ -42,6 +42,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::get('/my_courses', [ModeratorController::class, 'myCourses']);
         Route::post('/save-student-mark1', [ModeratorController::class, 'saveStudentMark1']);
         Route::post('/save-student-mark2', [ModeratorController::class, 'saveStudentMark2']);
+        Route::post('/get-students-mark1' ,[ModeratorController::class, 'getStudentMark1']);
         Route::post('moderator', [ModeratorController::class, 'moderatorAccount']);
     });
 });

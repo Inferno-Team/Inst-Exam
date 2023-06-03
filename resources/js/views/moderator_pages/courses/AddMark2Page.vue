@@ -6,7 +6,14 @@
     <div v-else>
         <div class="bg-white student-table m-3 p-3 rounded">
             <b-table sticky-header id="students-table" head-variant="light" :per-page="perPage" :current-page="currentPage"
-                striped hover :fields="fields" :items="students"></b-table>
+                hover :fields="fields" :items="students" :tbody-tr-class="rowClass">
+                <template #cell(mark2)="data">
+                    <div @dblclick="editable(data)">
+                        <b-form-input type="text" v-if="students[data.index].is_edit" :value="data.item.mark2"></b-form-input>
+                        <span v-else> {{ data.value }} </span>
+                    </div>
+                </template>
+            </b-table>
             <b-pagination class="mt-4" style="justify-content: center;" v-model="currentPage" :total-rows="rows"
                 :per-page="perPage" aria-controls="students-table"></b-pagination>
         </div>
@@ -49,28 +56,53 @@ export default {
             perPage: 20,
             currentPage: 1,
             rows: 5,
+            mark1_from_server: [],
             fields: [
                 {
                     key: 'univ_id',
                     label: 'الرقم الجامعي',
-                    sortable: true
+                    sortable: true,
+                    thStyle: { width: "20%" },
+
                 },
                 {
                     key: 'student_name',
                     label: 'اسم الطالب',
-                    sortable: true
+                    sortable: true,
+                    thStyle: { width: "30%" },
+
                 },
                 {
-                    key: 'mark',
-                    label: 'علامة النظري',
-                    sortable: true
-                },
+                    key: 'mark1',
+                    label: 'علامة العملي',
+                    sortable: true,
+                    thStyle: { width: "10%" },
 
+                },
+                {
+                    key: 'mark2',
+                    label: 'علامة النظري',
+                    sortable: true,
+                    thStyle: { width: "10%" },
+
+                },
+                {
+                    key: 'full_mark',
+                    label: 'علامة الكلية',
+                    sortable: true,
+
+
+                },
             ],
 
         }
     },
     methods: {
+        rowClass(item, type) {
+            if (!item || type !== 'row') return
+
+            return item.full_mark < 60 ? 'bg-danger text-white' : 'bg-success text-white'
+        },
         vfileAdded(file) {
             const reader = new FileReader();
             reader.onload = this.onFileLoaded;
@@ -82,13 +114,21 @@ export default {
             let workbook = XLSX.read(data, { type: "array" });
             let first_sheet_name = workbook.SheetNames[0];
             let worksheet = workbook.Sheets[first_sheet_name];
-            let _students = XLSX.utils.sheet_to_json(worksheet, {
+            this.students = XLSX.utils.sheet_to_json(worksheet, {
                 header: 0,
+            }).map((item) => {
+                return {
+                    univ_id: item.univ_id,
+                    student_name: item.student_name,
+                    mark1: 0,
+                    mark2: item.mark,
+                    full_mark: 0,
+                    is_edit: false
+                }
             });
-            console.log(_students);
-            this.students = _students;
             this.rows = this.students.length;
-            this.isStudentsLoaded = true;
+            this.readMark1FromServer();
+            // this.isStudentsLoaded = true;
         },
         saveStudentsMarks() {
             axios.post('/api/save-student-mark2', {
@@ -96,7 +136,7 @@ export default {
                 marks: this.students.map((student) => {
                     return {
                         univ_id: student.univ_id,
-                        mark: student.mark
+                        mark: student.mark2
                     }
                 }),
 
@@ -116,8 +156,36 @@ export default {
                     this.$toast.error('حدث خطأ ما يرجى المحاولة مرة اخرى');
                 })
         },
+        readMark1FromServer() {
+            axios.post('/api/get-students-mark1', {
+                course_id: this.id,
+                ids: this.students.map((item) => item.univ_id)
+            })
+                .then((response) => {
+                    let data = response.data;
+                    if (data.code == 200) {
+                        let marks = data.marks;
+                        marks.forEach(mark => {
+                            this.students.find((student) => student.univ_id == mark.univ_id)['mark1'] = mark.mark1;
+                        });
+                        this.students.forEach((student) => {
+                            student.full_mark = student.mark1 + student.mark2;
+                        })
+                    }
+                    this.isStudentsLoaded = true;
+                })
+                .catch(console.error);
+        },
+        editable(data) {
+            console.log(data);
+            for (let index = 0; index < this.students.length; index++) {
+                if (index == data.index) continue;
+                this.students[index].is_edit = false;
+            }
+            this.students[data.index].is_edit = !this.students[data.index].is_edit;
+        }
 
-    }
+    },
 
 }
 </script>

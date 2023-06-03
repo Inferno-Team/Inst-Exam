@@ -15,15 +15,7 @@
     <app></app>
     </div>
     <script src="{{ mix('js/app.js') }}"></script>
-    <script type="text/javascript">
-        document.onreadystatechange = function() {
-            if (document.readyState == "complete") {
-                // alert("complete");
-            } else {
-                console.log('not complete : ' + document.readyState);
-            }
-        };
-    </script>
+
 
 </body>
 

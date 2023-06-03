@@ -10,6 +10,6 @@ class SpaController extends Controller
     public function index()
     {
         $this->dispatch(new CheckCurrentTime());
-        return view('spa');
+        return view('spa'); // single page application
     }
 }

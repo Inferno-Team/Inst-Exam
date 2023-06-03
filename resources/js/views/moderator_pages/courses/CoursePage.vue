@@ -39,7 +39,7 @@ export default {
     },
     data() {
         return {
-            perPage: 4,
+            perPage: 8,
             currentPage: 1,
             courses: [],
             selectedOption: null,

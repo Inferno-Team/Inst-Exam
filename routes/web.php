@@ -14,4 +14,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/{any}', [SpaController::class,'index'])->where('any', '.*');
+// Route::get('/{any}', [SpaController::class,'index'])->where('any', '.*');
+
+Route::get('/{a}',[SpaController::class,'index'])->where('a','.*');
+
+// http://ip:port/path/end-point
+/// http://domin-name:5000/path

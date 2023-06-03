@@ -51,7 +51,7 @@ class CheckStudentStatusJob implements ShouldQueue
                         $sutdentsCourses = Student::with('courses', 'year')->get();
                         foreach ($sutdentsCourses as  $student) {
                             $student_last_year = false;
-                            if ($student->section_year_id->year_id == 2)
+                            if ($student->year->sectionYear->year_id == 2)
                                 $student_last_year = true;
                             $courses  = $student->courses;
                             $failedCourseCounter = 0;
@@ -62,7 +62,7 @@ class CheckStudentStatusJob implements ShouldQueue
                                     break;
                             }
                             $status = 'منقول';
-                            $section_year_id = $student->section_year_id;
+                            $section_year_id = $student->year->section_year_id;
                             if ($failedCourseCounter <= 4) {
                                 if ($student_last_year) {
                                     if ($failedCourseCounter == 0)
@@ -81,11 +81,11 @@ class CheckStudentStatusJob implements ShouldQueue
                                 'student_id' => $student->id,
                                 'status' => $status,
                                 'section_year_id' => $section_year_id,
-                                'year_date' =>  $date->year,
-                                'last_status' =>  $student->section_year_id != $section_year_id,
+                                'year' =>  $date->year,
+                                'last_status' => true,
                             ]);
                             info("student : $student->univ_id  new status : $status");
-                            if ($student->section_year_id != $section_year_id) {
+                            if ($student->dsection_year_i != $section_year_id) {
                                 $studentYear = StudentYear::where('student_id', $student->id)->first();
                                 $studentYear->section_year_id = $section_year_id;
                                 $studentYear->save();

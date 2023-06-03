@@ -14,7 +14,7 @@ class StudentStatus extends Model
         'status',
         'section_year_id',
         'last_status',
-        'year_date'
+        'year'
     ];
     public function student(): BelongsTo
     {

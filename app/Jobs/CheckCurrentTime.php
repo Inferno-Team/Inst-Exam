@@ -45,7 +45,7 @@ class CheckCurrentTime implements ShouldQueue
             $studing_year = "$this_year/" . ($this_year + 1);
         } else if ($thisTime > $date->first_tirm_end && $thisTime < $date->first_tirm_exam_end) {
             $date->current = 'first-tirm-exam';
-            $studing_year = "$this_year/" . ($this_year + 1);
+            $studing_year = ($this_year - 1) . "/$this_year";
         } else if ($thisTime > $date->first_tirm_exam_end && $thisTime < $date->second_tirm_start) {
             $date->current = 'spring-holiday';
             $studing_year = ($this_year - 1) . "/$this_year";

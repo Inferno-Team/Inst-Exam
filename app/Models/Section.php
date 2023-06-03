@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+use function PHPUnit\Framework\isNan;
+
 class Section extends Model
 {
     use HasFactory;
@@ -16,7 +18,7 @@ class Section extends Model
     }
     public function sectionYear(): HasMany
     {
-        return $this->hasMany(SectionYear::class, 'section_id');
+        return $this->hasMany(SectionYear::class, 'section_id')->with('year');
     }
     public function format()
     {

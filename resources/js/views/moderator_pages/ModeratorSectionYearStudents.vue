@@ -13,7 +13,7 @@
 <script>
 import Section from '../../components/section/Section.vue';
 export default {
-    components: { 'x-section': Section },
+    components: {  'x-section':Section },
     mounted() {
         this.getSectionYears();
     },

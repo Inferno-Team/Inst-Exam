@@ -34,4 +34,12 @@ class SectionYearTerm extends Model
     {
         return $this->hasMany(studentYears::class, 'section_year_term_id');
     }
+    public function format()
+    {
+        return (object)[
+            "section_name" => $this->section->name,
+            "year" => $this->yearTerm->year->name,
+            "term" => $this->yearTerm->name
+        ];
+    }
 }

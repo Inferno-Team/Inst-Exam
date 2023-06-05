@@ -24,6 +24,10 @@ export default {
             this.$router.push({
                 name: 'moderator-page'
             });
+        } else if (userType == TYPES.STUDENT) {
+            this.$router.push({
+                name: 'student-page'
+            });
         } else {
             this.$toast.error(userType);
         }

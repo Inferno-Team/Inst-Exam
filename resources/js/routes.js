@@ -14,6 +14,8 @@ import CoursePage from './views/moderator_pages/courses/CoursePage.vue'
 import AddMark1Page from './views/moderator_pages/courses/AddMark1Page.vue'
 import AddMark2Page from './views/moderator_pages/courses/AddMark2Page.vue'
 import AddNewStudentPage from './views/moderator_pages/AddNewStudentPage.vue'
+
+import StudentPage from './views/StudentPage.vue'
 export const routes = [{
         path: '/',
         name: 'home-page',
@@ -50,7 +52,7 @@ export const routes = [{
                 path: '/admin/dates',
                 component: Dates
             },
-             {
+            {
                 name: 'change-student-status',
                 path: '/admin/change-student-status',
             },
@@ -98,6 +100,11 @@ export const routes = [{
                 component: AddNewStudentPage
             }
         ]
+    },
+    {
+        path: '/student',
+        component: StudentPage,
+        name: 'student-page',
     }
 
 ];

@@ -5,7 +5,7 @@
                 :thickness="'10%'" :line="'butt'" />
         </div>
         <div v-else>
-            <x-section v-for="(item, index) in sections" :key="index" :section="item" />
+            <x-section :is_admin="true" v-for="(item, index) in sections" :key="index" :section="item" />
         </div>
     </div>
 </template>

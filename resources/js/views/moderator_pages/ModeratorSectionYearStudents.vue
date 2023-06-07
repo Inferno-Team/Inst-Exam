@@ -5,7 +5,7 @@
                 :thickness="'10%'" :line="'butt'" />
         </div>
         <div v-else>
-            <x-section :section="section" />
+            <x-section :section="section" :is_admin="false" />
         </div>
     </div>
 </template>

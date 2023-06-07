@@ -34,7 +34,6 @@ class AddNewStudentRequest extends FormRequest
             'birth_place' => 'required',
             'gender' => 'required',
             'field_number' => 'required',
-            'recruitment_division' => 'required',
             'city' => 'required',
             'address' => 'required',
             'nationalty' => 'required',

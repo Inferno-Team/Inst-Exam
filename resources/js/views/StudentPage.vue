@@ -15,6 +15,13 @@
                 <BIconArrowUpRightSquare variant="dark" style="margin-top: 10px;padding: 3px;"></BIconArrowUpRightSquare>
             </div>
         </div>
+        <div class="floating-container inner">
+            <div class="floating-button" @click.prevent="addMarkRevelRequest">
+                <!-- <md-icon class="p-4">logout</md-icon> -->
+                <p>طلب كشف علامات</p>
+            </div>
+        </div>
+
     </div>
 </template>
 
@@ -47,6 +54,7 @@ export default {
             })
             .catch(console.error);
     },
+
     data() {
         return {
             perPage: 20,
@@ -127,10 +135,13 @@ export default {
         rowClass(item, type) {
             if (!item || type !== 'row') return
 
-            return item.full_mark >= 60 ? 'bg-success text-white' : item.full_mark == null ? 'bg-info text-white' :
+            return item.full_mark >= 60 ? 'bg-success text-white' : item.full_mark == null ? 'first_time_bg text-white' :
                 'bg-danger text-white';
 
         },
+        addMarkRevelRequest(){
+
+        }
     },
 }
 </script>
@@ -156,5 +167,25 @@ export default {
     overflow-y: auto;
     justify-items: center
     */
+}
+
+.inner {
+    top: 1rem;
+    left: 3rem;
+    width: 120px;
+}
+
+.inner .floating-button {
+    color: black;
+    width: 160px;
+    border-radius: 1rem;
+    line-height: 44px;
+}
+
+.inner p {
+    font-size: 1rem;
+}
+.first_time_bg{
+    background-color:purple;
 }
 </style>

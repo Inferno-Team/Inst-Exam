@@ -9,7 +9,8 @@
                 hover :fields="fields" :items="students" :tbody-tr-class="rowClass">
                 <template #cell(mark2)="data">
                     <div @dblclick="editable(data)">
-                        <b-form-input type="text" v-if="students[data.index].is_edit" :value="data.item.mark2"></b-form-input>
+                        <b-form-input type="number" v-if="students[data.index].is_edit"
+                            v-model.number="data.item.mark2"></b-form-input>
                         <span v-else> {{ data.value }} </span>
                     </div>
                 </template>
@@ -177,12 +178,14 @@ export default {
                 .catch(console.error);
         },
         editable(data) {
-            console.log(data);
             for (let index = 0; index < this.students.length; index++) {
                 if (index == data.index) continue;
                 this.students[index].is_edit = false;
             }
             this.students[data.index].is_edit = !this.students[data.index].is_edit;
+
+            this.students[data.index].full_mark = this.students[data.index].mark1
+                + this.students[data.index].mark2;
         }
 
     },

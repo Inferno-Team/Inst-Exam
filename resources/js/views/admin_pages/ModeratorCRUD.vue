@@ -2,7 +2,7 @@
     <div style="height: 100%;">
         <div class="report-container">
             <x-section v-for="(item, index) in sections" :key="index" @section-click="onSectionClicked" :index="index"
-                :data="item" />
+                :data="item"  />
             <x-section @section-click="openAddSectionModal" :index="'-1'" />
 
         </div>

@@ -21,7 +21,6 @@ class CreateStudentCoursesTable extends Migration
             $table->boolean("with_help")->default(false);
             $table->integer('mark1')->nullable();
             $table->integer('mark2')->nullable();
-            $table->integer('year')->nullable();
             $table->timestamps();
         });
     }

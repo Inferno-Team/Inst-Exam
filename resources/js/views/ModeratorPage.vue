@@ -32,7 +32,7 @@ export default {
                 let moderatedSectionYear = data.moderator.moderatedSectionYear;
                 console.log(moderatedSectionYear);
                 if (moderatedSectionYear.year_id == 1) {
-                    this.menu.splice(1,0, {
+                    this.menu.splice(1, 0, {
                         title: 'إضافة طالب',
                         icon: 'fa  fa-user-plus',//<i class="fa-solid fa-user-shield"></i>
                         href: '/moderator/add-student',
@@ -58,6 +58,12 @@ export default {
                     icon: 'fa fa-plus-square',//<i class="fa-solid fa-user-shield"></i>
                     href: '/moderator/courses',
                 },
+                {
+                    title: 'طلبات كشف العلامات',
+                    icon: 'fa fa-plus-square',//<i class="fa-solid fa-user-shield"></i>
+                    href: '/moderator/requests',
+                },
+
                 /* {
                     title: 'إضافة علامات عملي',
                     icon: 'fa fa-shield',//<i class="fa-solid fa-user-shield"></i>

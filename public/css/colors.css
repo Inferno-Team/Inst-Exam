@@ -49,9 +49,6 @@
     z-index: 1;
 }
 
-.floating-container:hover {
-    /* height: 300px; */
-}
 
 .floating-container:hover .floating-button {
     box-shadow: 0 10px 25px rgba(44, 179, 240, 0.6);
@@ -78,4 +75,8 @@
     cursor: pointer;
     -webkit-transition: all 0.3s;
     transition: all 0.3s;
+}
+
+.first_time_bg{
+    background-color:purple;
 }

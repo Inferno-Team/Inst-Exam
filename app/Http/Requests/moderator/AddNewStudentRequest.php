@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Requests\moderator;
+
 use App\Http\Traits\LocalResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Http\FormRequest;
@@ -37,6 +38,8 @@ class AddNewStudentRequest extends FormRequest
             'city' => 'required',
             'address' => 'required',
             'nationalty' => 'required',
+            "year_of_birth" => "required",
+            "first_year" => "required"
         ];
     }
     protected function failedValidation(Validator $validator)

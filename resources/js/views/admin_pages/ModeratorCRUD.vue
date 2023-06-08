@@ -2,7 +2,7 @@
     <div style="height: 100%;">
         <div class="report-container">
             <x-section v-for="(item, index) in sections" :key="index" @section-click="onSectionClicked" :index="index"
-                :data="item"  />
+                :data="item" />
             <x-section @section-click="openAddSectionModal" :index="'-1'" />
 
         </div>
@@ -16,6 +16,14 @@
                     </b-col>
                     <b-col sm="8">
                         <b-form-input autocomplete="off" v-model="new_section.name" type="text"></b-form-input>
+                    </b-col>
+                </b-row>
+                <b-row class="my-3">
+                    <b-col sm="4">
+                        <label style="font-size: 14px;">اسم القسم في اللغة الانكليزية :</label>
+                    </b-col>
+                    <b-col sm="8">
+                        <b-form-input autocomplete="off" v-model="new_section.en_name" type="text"></b-form-input>
                     </b-col>
                 </b-row>
 
@@ -46,10 +54,12 @@ export default {
         return {
             sections: [],
             empty_new_section: {
-                name: ''
+                name: '',
+                en_name: ''
             },
             new_section: {
-                name: ''
+                name: '',
+                en_name: ''
             }
         }
     },
@@ -69,18 +79,19 @@ export default {
         },
         addSection() {
             axios.post('/api/add-section', {
-                name: this.new_section.name
+                name: this.new_section.name,
+                en_name: this.new_section.en_name
             })
-            .then((response)=>{
-                let data = response.data;
-                this.$toast.success(data.msg);
-                this.sections.push(data.section);
+                .then((response) => {
+                    let data = response.data;
+                    this.$toast.success(data.msg);
+                    this.sections.push(data.section);
 
-            })
-            .catch((error)=>{
-                this.$toast.error('حصل خطأ ما يرجى المحاولة مرة ثانية');
-                console.log(error);
-            })
+                })
+                .catch((error) => {
+                    this.$toast.error('حصل خطأ ما يرجى المحاولة مرة ثانية');
+                    console.log(error);
+                })
 
             this.$bvModal.hide('add-section');
         }

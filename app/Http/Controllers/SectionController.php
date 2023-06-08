@@ -25,10 +25,11 @@ class SectionController extends Controller
     {
         $section = Section::create([
             'name' => $request->name,
+            'en_name' => $request->en_name,
         ]);
         // add year to this section
         $years = Year::get();
-        foreach($years as $year){
+        foreach ($years as $year) {
             SectionYear::create([
                 'year_id' => $year->id,
                 'section_id' => $section->id,
@@ -36,5 +37,4 @@ class SectionController extends Controller
         }
         return LocalResponse::returnData('section', $section, 'تمت إضافة القسم بنجاح');
     }
-
 }

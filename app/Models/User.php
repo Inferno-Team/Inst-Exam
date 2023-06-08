@@ -59,5 +59,8 @@ class User extends Authenticatable
             'phone_number' => $this->phone_number,
         ];
     }
-
+    public function student(): HasOne
+    {
+        return $this->hasOne(Student::class, "user_id");
+    }
 }

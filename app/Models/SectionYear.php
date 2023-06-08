@@ -23,6 +23,11 @@ class SectionYear extends Model
     {
         return $this->belongsTo(Year::class, 'year_id');
     }
+    public function section(): BelongsTo
+    {
+        return $this->belongsTo(Section::class, 'section_id');
+    }
+
     public function format()
     {
         return [

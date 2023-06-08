@@ -27,6 +27,7 @@ use App\Http\Requests\moderators\AddNewCourseRequest;
 use App\Http\Requests\moderator\SaveStudentMark2Request;
 use App\Http\Requests\moderators\GetStudentMark1;
 use App\Http\Requests\moderators\SaveStudentMarkRequest;
+use App\Models\MarkRevelRequest;
 
 class ModeratorController extends Controller
 {
@@ -226,5 +227,21 @@ class ModeratorController extends Controller
                 return $id;
             }
         }
+    }
+    public function getAllRequests()
+    {
+        $user = Auth::user();
+
+        $year_section_modetator = YearSectionModetator::where("moderator_id", $user->id)->first();
+        $section_year = SectionYear::where('year_id', $year_section_modetator->year_id)
+            ->where('section_id', $year_section_modetator->section_id)->first();
+        $requests = MarkRevelRequest::where("section_year_id", $section_year->id)->with('student.user')->get();
+        return LocalResponse::returnData("requests", $requests);
+    }
+    public function studentMarkReportData($id)
+    {
+        info($id);
+        $request = MarkRevelRequest::where('id', $id)->first();
+        return LocalResponse::returnData("student", MarkRevelRequest::format($request));
     }
 }

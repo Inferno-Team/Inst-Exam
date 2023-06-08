@@ -11,7 +11,7 @@ use function PHPUnit\Framework\isNan;
 class Section extends Model
 {
     use HasFactory;
-    protected $fillable = ['name'];
+    protected $fillable = ['name',"en_name"];
     public function sectionYearTerm(): HasMany
     {
         return $this->hasMany(SectionYearTerm::class, 'section_id');

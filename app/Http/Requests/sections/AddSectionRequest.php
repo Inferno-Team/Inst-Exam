@@ -28,14 +28,17 @@ class AddSectionRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|unique:sections,name'
+            'name' => 'required|unique:sections,name',
+            'en_name' => 'required|unique:sections,en_name',
         ];
     }
     public function messages()
     {
         return [
-            'first_name.required' => 'هذا الحقل مطلوب',
-            'last_name.unique' => 'اسم هذا القسم موجود بالفعل',
+            'name.required' => 'هذا الحقل مطلوب',
+            'name.unique' => 'اسم هذا القسم موجود بالفعل',
+            'en_name.required' => 'هذا الحقل مطلوب',
+            'en_name.unique' => 'اسم هذا القسم موجود بالفعل',
 
         ];
     }

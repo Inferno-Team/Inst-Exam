@@ -12,10 +12,11 @@ class Student extends Model
 {
     use HasFactory;
     protected $fillable = [
+        'user_id',
         'univ_id',
         'father_name',
         'mother_name',
-        'user_id',
+        'last_name',
         'birth_place',
         'gender',
         'field_number',
@@ -23,7 +24,8 @@ class Student extends Model
         'city',
         'address',
         'nationalty',
-        'last_name',
+        "year_of_birth",
+        "first_year"
     ];
 
     public function user()
@@ -42,5 +44,19 @@ class Student extends Model
     public function year(): HasOne
     {
         return $this->hasOne(StudentYear::class, 'student_id');
+    }
+    public function format()
+    {
+        return (object)[
+            "full_name" => $this->user->first_name . " " . $this->user->last_name,
+            "birth_place" => $this->birth_place,
+            "nationalty" => $this->nationalty,
+            "year_of_birth" => $this->year_of_birth,
+            "first_year" => $this->first_year,
+            // "first_year" => $this->statuses->sortBy("created_at")->first()->year,
+            // "last_year" => $this->statuses->where("last_status", true)->first()->year,
+
+            "last_year" => "2021/2022",
+        ];
     }
 }

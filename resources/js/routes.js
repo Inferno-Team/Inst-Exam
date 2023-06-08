@@ -14,6 +14,8 @@ import CoursePage from './views/moderator_pages/courses/CoursePage.vue'
 import AddMark1Page from './views/moderator_pages/courses/AddMark1Page.vue'
 import AddMark2Page from './views/moderator_pages/courses/AddMark2Page.vue'
 import AddNewStudentPage from './views/moderator_pages/AddNewStudentPage.vue'
+import MarkRevelRequests from "./views/moderator_pages/MarkRevelRequests.vue"
+import MarkReportPage from './views/moderator_pages/reports/MarkReportPage.vue'
 
 import StudentPage from './views/StudentPage.vue'
 export const routes = [{
@@ -98,6 +100,18 @@ export const routes = [{
                 path: 'add-student',
                 name: 'add-student',
                 component: AddNewStudentPage
+            },
+            {
+                path: 'requests',
+                name: 'requests',
+                component: MarkRevelRequests
+            },
+            {
+                path:'mark-report/:id',
+                name:'mark-report',
+                component:MarkReportPage,
+                props:true
+
             }
         ]
     },

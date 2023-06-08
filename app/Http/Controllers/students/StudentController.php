@@ -7,6 +7,8 @@ use App\Models\Student;
 use Illuminate\Http\Request;
 use App\Http\Traits\LocalResponse;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\student\RequestNewMarksRevelRequest;
+use App\Models\MarkRevelRequest;
 use Illuminate\Support\Facades\Auth;
 
 class StudentController extends Controller
@@ -26,5 +28,17 @@ class StudentController extends Controller
         ]);
 
         return LocalResponse::returnData('courses', $courses);
+    }
+
+    public function requestNewMarksRevel(RequestNewMarksRevelRequest $request)
+    {
+        $student = Student::where('user_id', Auth::user()->id)->with("year")->first();
+        $mark_request = MarkRevelRequest::create([
+            "date_financial_receipt" => $request->date_financial_receipt,
+            "no_financial_receipt" => $request->no_financial_receipt,
+            "student_id" => $student->id,
+            "section_year_id" => $student->year->section_year_id,
+        ]);
+        return LocalResponse::returnMessage("تمت إضافة الطلب بنجاح");
     }
 }

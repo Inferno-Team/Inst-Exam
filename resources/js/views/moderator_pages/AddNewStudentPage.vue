@@ -77,6 +77,36 @@
                 </b-col>
 
             </b-row>
+
+            <b-row>
+                <b-col>
+
+                    <b-row class="my-3">
+                        <b-col sm="5">
+                            <label style="font-size: 14px;">سنة التولد :</label>
+                        </b-col>
+                        <b-col sm="7">
+                            <b-form-input autocomplete="off" v-model="new_student.year_of_birth" type="text"></b-form-input>
+                        </b-col>
+                    </b-row>
+
+                </b-col>
+                <b-col>
+
+                    <b-row class="my-3">
+                        <b-col sm="5">
+                            <label style="font-size: 14px;">تاريخ سنة المستجد</label>
+                        </b-col>
+                        <b-col sm="7">
+                            <b-form-input autocomplete="off" v-model="new_student.first_year" type="text"></b-form-input>
+
+                        </b-col>
+                    </b-row>
+
+                </b-col>
+
+            </b-row>
+
             <b-row>
                 <b-col>
 
@@ -92,13 +122,13 @@
                 </b-col>
                 <b-col>
 
-                    <b-row class="my-3" >
+                    <b-row class="my-3">
                         <b-col sm="5">
                             <label style="font-size: 14px;">شعبة التجنيد :</label>
                         </b-col>
                         <b-col sm="7">
-                            <b-form-input :disabled="new_student.gender == 'انثى'" autocomplete="off" v-model="new_student.recruitment_division"
-                                type="text"></b-form-input>
+                            <b-form-input :disabled="new_student.gender == 'انثى'" autocomplete="off"
+                                v-model="new_student.recruitment_division" type="text"></b-form-input>
                         </b-col>
                     </b-row>
 
@@ -179,6 +209,8 @@ export default {
                 city: '',
                 address: '',
                 nationalty: '',
+                first_year: "",
+                year_of_birth: "",
             },
             empty_student: {
                 first_name: '',
@@ -217,7 +249,7 @@ export default {
             axios.post('/api/add-new-student', this.new_student)
                 .then((response) => {
                     let data = response.data;
-                    if (data.code == 200 ) {
+                    if (data.code == 200) {
                         this.$toast.success(data.msg);
                     } else {
                         this.$toast.warning(data.msg);
@@ -242,6 +274,7 @@ export default {
     height: 250px;
     width: 330px;
 }
+
 .add-student {
     width: 190px !important;
 }

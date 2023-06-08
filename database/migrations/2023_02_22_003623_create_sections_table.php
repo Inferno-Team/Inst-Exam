@@ -17,10 +17,12 @@ class CreateSectionsTable extends Migration
         Schema::create('sections', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('en_name')->default("");
             $table->timestamps();
         });
         DB::table('sections')->insert([
             'name' => 'تقانة المعلومات',
+            'en_name' => 'Engineering Technical',
             'created_at' => now(),
             'updated_at' => now(),
         ]);

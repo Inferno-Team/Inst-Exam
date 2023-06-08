@@ -25,7 +25,9 @@ class StudentFactory extends Factory
             'recruitment_division' => NULL,
             'city' => 'حلب',
             'address' => 'حلب',
-            'nationalty' => 'ع.س'
+            'nationalty' => "عربي سوري",
+            "first_year" => "2020/2021",
+            "year_of_birth" => "2000",
         ];
     }
 }

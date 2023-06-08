@@ -28,7 +28,7 @@ class LoginRequest extends FormRequest
     public function rules()
     {
         return [
-            'first_name' =>  'required|exists:users,first_name',
+            'first_name' =>  'required',
             'password' =>  'required'
         ];
     }
@@ -36,7 +36,6 @@ class LoginRequest extends FormRequest
     {
         return [
             'first_name.required' => 'اسم المستخدم يجب ان يكون موجود',
-            'first_name.exists' => 'اسم المستخدم غير موجود',
             'password.required' => 'كلمة المرور يجب ان تكون موجودة',
 
         ];

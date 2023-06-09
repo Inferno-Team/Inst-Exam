@@ -255,15 +255,13 @@ class ModeratorController extends Controller
     }
     public function studentMarkReportData($id)
     {
-        info($id);
         $request = MarkRevelRequest::where('id', $id)->first();
         return LocalResponse::returnData("data", [
             "request" => (object)[
                 "no" => $request->no_financial_receipt,
                 "date" => Carbon::createFromTimestampMs($request->date_financial_receipt)->format("Y/m/d"),
             ],
-            //groupBy('course.sectionYearTerm.yearTerm.year.name')
-            "courses" => StudentCourse::where("student_id", $request->student_id)->with('course.sectionYearTerm.yearTerm.year')->get()->groupBy('course.sectionYearTerm.yearTerm.year.name')->sortBy('course.sectionYearTerm.year_term_id'),
+            "courses" => StudentCourse::where("student_id", $request->student_id)->with('course.sectionYearTerm.yearTerm.year')->get()->groupBy('course.sectionYearTerm.yearTerm.year.name'),
             "statuses" => StudentStatus::where('student_id', $request->student_id)->get()->sortBy('created_at')->groupBy("section_year.year.name"),
             "student" => MarkRevelRequest::format($request),
             "section" => YearSectionModetator::where("section_id", $request->section_year->section_id)->with('moderator')->get(),

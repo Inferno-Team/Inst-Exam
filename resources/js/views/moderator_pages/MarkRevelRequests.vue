@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="bg-white m-3 p-3 rounded">
-            <h4 class=""> المواد</h4>
+            <h4 class=""> الطلبات</h4>
             <b-table :fields="fields" @row-clicked="onRequestClicked" id="my-table" :per-page="perPage"
                 :current-page="currentPage" striped hover :items="requests"></b-table>
             <b-pagination class="mt-4" style="justify-content: center;" v-model="currentPage" :total-rows="rows"

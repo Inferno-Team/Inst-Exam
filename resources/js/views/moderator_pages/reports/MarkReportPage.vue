@@ -173,11 +173,6 @@ export default {
                 imageType: "image/jpeg",
                 output: ` كشف علامات للطالبة  ${this.student.full_name}.pdf`,
             });
-            // const doc = new jsPDF({
-            //   orientation: "landscape",
-            //   unit: "in",
-            //   format: [4, 2],
-            // });
         },
     }
 

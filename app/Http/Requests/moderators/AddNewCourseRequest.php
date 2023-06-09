@@ -29,6 +29,7 @@ class AddNewCourseRequest extends FormRequest
     {
         return [
             'name' => 'required',
+            'type' => 'required|in:عملية,تقنية',
             'tirm_name' => 'required|in:الفصل الأول,الفصل الثاني'
         ];
     }
@@ -37,5 +38,4 @@ class AddNewCourseRequest extends FormRequest
     {
         throw new HttpResponseException(LocalResponse::returnError('بيانات خاطئة', 400, $validator->errors()));
     }
-
 }

@@ -53,10 +53,10 @@ class Student extends Model
             "nationalty" => $this->nationalty,
             "year_of_birth" => $this->year_of_birth,
             "first_year" => $this->first_year,
-            // "first_year" => $this->statuses->sortBy("created_at")->first()->year,
-            // "last_year" => $this->statuses->where("last_status", true)->first()->year,
+            "first_year" => $this->statuses->sortBy("created_at")->first()->year,
+            "last_year" => $this->statuses->where("last_status", true)->first()->year,
 
-            "last_year" => "2021/2022",
+            // "last_year" => "2021/2022",
         ];
     }
 }

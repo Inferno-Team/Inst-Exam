@@ -9,6 +9,11 @@
             <b-form-select v-model="course.term" :options="this.terms" style="width: 22rem;height: 2rem;"
                 placeholder="الفصل" required />
         </div>
+        <div class="my-2 p-2" style="max-width: fit-content;">
+            <b-form-select v-model="course.type" :options="this.types" style="width: 22rem;height: 2rem;"
+                placeholder="نوع المادة" required />
+        </div>
+
         <div class="my-2 p-2 button-container">
             <b-button size="lg" :disabled="isLoading" @click.prevent="addCourse" class="inline-button">إضافة</b-button>
             <vue-ellipse-progress v-if="isLoading" class="mx-auto" :loading="true" :size="48"
@@ -27,10 +32,12 @@ export default {
             emptyCourse: {
                 name: '',
                 term: null,
+                type: null
             },
             course: {
                 name: '',
                 term: null,
+                type: null
             },
             terms: [{
                 value: null,
@@ -41,7 +48,18 @@ export default {
             }, {
                 value: 'الفصل الثاني',
                 text: 'الفصل الثاني'
-            },]
+            },],
+            types: [{
+                value: null,
+                text: 'يرجى اختيار نوع المادة'
+            }, {
+                text: "مادة عملية",
+                value: 'عملية'
+            }, {
+                text: "مادة تقنية",
+                value: 'تقنية'
+            },],
+
         };
     },
     methods: {
@@ -49,13 +67,14 @@ export default {
             this.isLoading = true;
             axios.post('/api/add_course', {
                 name: this.course.name,
-                tirm_name: this.course.term
+                tirm_name: this.course.term,
+                type: this.course.type
             })
                 .then((res) => {
                     let data = res.data;
                     if (data.code == 200) {
                         this.$toast.success(data.msg);
-                        this.course = this.emptyCourse;
+                        this.course = { ...this.emptyCourse };
                     }
                     else {
                         this.$toast.warning(data.msg);

@@ -27,7 +27,12 @@ use App\Http\Requests\moderators\AddNewCourseRequest;
 use App\Http\Requests\moderator\SaveStudentMark2Request;
 use App\Http\Requests\moderators\GetStudentMark1;
 use App\Http\Requests\moderators\SaveStudentMarkRequest;
+use App\Models\Dates;
 use App\Models\MarkRevelRequest;
+use App\Models\Section;
+use App\Models\StudentCourse;
+use App\Models\StudentStatus;
+use Carbon\Carbon;
 
 class ModeratorController extends Controller
 {
@@ -106,7 +111,9 @@ class ModeratorController extends Controller
             return LocalResponse::returnMessage('there is no section year term with this data.', 401);
         $course = Course::create([
             'name' => $request->name,
+            'type' => $request->type,
             'section_year_term_id' => $section_year_term->id,
+
         ]);
         // AddNewCourseJob::dispatch($course,$section_year_term);
         $this->dispatch(new AddNewCourseJob($course, $section_year_term));
@@ -174,6 +181,7 @@ class ModeratorController extends Controller
     public function addNewStudent(AddNewStudentRequest $request)
     {
         try {
+            $date = Dates::first();
             DB::beginTransaction();
             $univ_id = $this->generate_univ_id();
             $user = User::create([
@@ -204,6 +212,13 @@ class ModeratorController extends Controller
             StudentYear::create([
                 'student_id' => $student->id,
                 'section_year_id' => $section_year->id,
+            ]);
+            StudentStatus::create([
+                "student_id" => $student->id,
+                'section_year_id' => $section_year->id,
+                "last_status" => true,
+                'year' => $date->year,
+                "status" => "ناجح",
             ]);
             $this->dispatch(new InsertCoursesToNewStudents($student->id, $section_year->id));
             DB::commit();
@@ -242,6 +257,16 @@ class ModeratorController extends Controller
     {
         info($id);
         $request = MarkRevelRequest::where('id', $id)->first();
-        return LocalResponse::returnData("student", MarkRevelRequest::format($request));
+        return LocalResponse::returnData("data", [
+            "request" => (object)[
+                "no" => $request->no_financial_receipt,
+                "date" => Carbon::createFromTimestampMs($request->date_financial_receipt)->format("Y/m/d"),
+            ],
+            //groupBy('course.sectionYearTerm.yearTerm.year.name')
+            "courses" => StudentCourse::where("student_id", $request->student_id)->with('course.sectionYearTerm.yearTerm.year')->get()->groupBy('course.sectionYearTerm.yearTerm.year.name')->sortBy('course.sectionYearTerm.year_term_id'),
+            "statuses" => StudentStatus::where('student_id', $request->student_id)->get()->sortBy('created_at')->groupBy("section_year.year.name"),
+            "student" => MarkRevelRequest::format($request),
+            "section" => YearSectionModetator::where("section_id", $request->section_year->section_id)->with('moderator')->get(),
+        ]);
     }
 }

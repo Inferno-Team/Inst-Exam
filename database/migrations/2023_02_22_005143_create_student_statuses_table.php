@@ -25,7 +25,7 @@ class CreateStudentStatusesTable extends Migration
             ]);
             $table->foreignId('section_year_id')->references('id')->on('section_years')->cascadeOnDelete();
             $table->boolean('last_status')->default(true);
-            $table->string('year_date');
+            $table->string('year');
             $table->timestamps();
         });
     }

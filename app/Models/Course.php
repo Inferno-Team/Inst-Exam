@@ -12,7 +12,7 @@ class Course extends Model
 {
     use HasFactory;
     protected $appends = ['students_count', 'first_time_count', 'failed_count', 'sucessed_count'];
-    protected $fillable = ['name', 'section_year_term_id'];
+    protected $fillable = ['name', 'section_year_term_id', 'type'];
 
     public function sectionYearTerm(): BelongsTo
     {

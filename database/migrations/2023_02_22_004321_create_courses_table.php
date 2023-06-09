@@ -18,7 +18,7 @@ class CreateCoursesTable extends Migration
             $table->string('name');
             $table->foreignId('section_year_term_id')
                 ->references('id')->on('section_year_terms')->cascadeOnDelete();
-                
+            $table->enum("type", ["تقنية", "عملية"]);
             $table->timestamps();
         });
     }

@@ -1,5 +1,5 @@
 <template>
-    <div class="bg-white m-3 p-3 rounded">
+    <div class="bg-white m-3 p-3 rounded" style="height:600px">
         <h4 class=""> المواد</h4>
         <b-table :fields="fields" @row-clicked="onCourseClicked" id="my-table" :per-page="perPage"
             :current-page="currentPage" striped hover :items="courses"></b-table>
@@ -39,7 +39,7 @@ export default {
     },
     data() {
         return {
-            perPage: 8,
+            perPage: 10,
             currentPage: 1,
             courses: [],
             selectedOption: null,

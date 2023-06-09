@@ -26,7 +26,6 @@ class CheckStudentStatusJob implements ShouldQueue
      */
     public function __construct()
     {
-
     }
 
     /**
@@ -45,11 +44,10 @@ class CheckStudentStatusJob implements ShouldQueue
             switch ($current) {
                 case 'spring-holiday':
                 case 'summer-holiday': {
-                        $now = Carbon::now();
-                        $year =  $now->year;
+                        $studentIds = [];
                         // check student courses [marks]
-                        $sutdentsCourses = Student::with('courses', 'year')->get();
-                        foreach ($sutdentsCourses as  $student) {
+                        $students = Student::with('courses', 'year')->get();
+                        foreach ($students as  $student) {
                             $student_last_year = false;
                             if ($student->year->sectionYear->year_id == 2)
                                 $student_last_year = true;
@@ -76,6 +74,9 @@ class CheckStudentStatusJob implements ShouldQueue
                                 }
                             } else
                                 $status = 'راسب';
+                            $oldStatus = StudentStatus::where("student_id", $student->id)->first();
+                            $oldStatus->last_status = false;
+                            $oldStatus->save();
 
                             StudentStatus::create([
                                 'student_id' => $student->id,
@@ -84,14 +85,18 @@ class CheckStudentStatusJob implements ShouldQueue
                                 'year' =>  $date->year,
                                 'last_status' => true,
                             ]);
-                            info("student : $student->univ_id  new status : $status");
-                            if ($student->dsection_year_i != $section_year_id) {
+                            info("student : $student->univ_id  new status : $status , new year : $section_year_id");
+                            if ($student->year->section_year_id != $section_year_id) {
                                 $studentYear = StudentYear::where('student_id', $student->id)->first();
                                 $studentYear->section_year_id = $section_year_id;
                                 $studentYear->save();
-                                $this->dispatch(new InsertCoursesToNewStudents($student->id, $section_year_id));
+                                $studentIds[] = $student->id;
+                                // $this->dispatch(new InsertCoursesToNewStudents($student->id, $section_year_id));
                             }
                         }
+                        $ids = json_encode($studentIds);
+                        info("new insert course bulk has been issued with data : $ids for year : $section_year_id");
+                        dispatch(new InsertCourseToStudentBulkJob($studentIds, $section_year_id));
                     }
                     break;
                 default:

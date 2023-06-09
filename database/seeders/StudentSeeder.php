@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Dates;
 use App\Models\Student;
 use App\Models\StudentStatus;
 use App\Models\StudentYear;
@@ -17,7 +18,6 @@ class StudentSeeder extends Seeder
      */
     public function run()
     {
-
         User::factory()->count(10)->create()
             ->each(function (User $user) {
                 info("user : $user->id");
@@ -29,12 +29,34 @@ class StudentSeeder extends Seeder
                             "section_year_id" => rand(1, 2)
                         ])->first();
                         if ($studentYear->section_year_id == 2) {
-                            StudentStatus::factory()->count(1)->create([
-                                'student_id' => $student->id,
-                                'status' => 'منقول',
+                            // StudentStatus::factory()->count(1)->create([
+                            //     'student_id' => $student->id,
+                            //     'status' => 'منقول',
+                            //     'section_year_id' => 1,
+                            //     'last_status' => false,
+                            //     'year_date' => '2021-2022'
+                            // ]);
+                            StudentStatus::create([
+                                "student_id" => $student->id,
                                 'section_year_id' => 1,
-                                'last_status' => false,
-                                'year_date' => '2021-2022'
+                                "last_status" => false,
+                                'year' => "2021/2022",
+                                "status" => "ناجح",
+                            ]);
+                            StudentStatus::create([
+                                "student_id" => $student->id,
+                                'section_year_id' => 2,
+                                "last_status" => true,
+                                'year' => "2022/2023",
+                                "status" => "خريج",
+                            ]);
+                        } else {
+                            StudentStatus::create([
+                                "student_id" => $student->id,
+                                'section_year_id' => 1,
+                                "last_status" => true,
+                                'year' => "2022/2023",
+                                "status" => "ناجح",
                             ]);
                         }
                     });

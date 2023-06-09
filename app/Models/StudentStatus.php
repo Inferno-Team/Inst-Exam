@@ -20,4 +20,8 @@ class StudentStatus extends Model
     {
         return $this->belongsTo(Student::class, 'student_id');
     }
+    public function section_year()
+    {
+        return $this->belongsTo(SectionYear::class, 'section_year_id');
+    }
 }

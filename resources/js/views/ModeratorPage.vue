@@ -63,6 +63,11 @@ export default {
                     icon: 'fa fa-plus-square',//<i class="fa-solid fa-user-shield"></i>
                     href: '/moderator/requests',
                 },
+                 {
+                    title: 'تقرير العشر الأوائل',
+                    icon: 'fa fa-plus-square',//<i class="fa-solid fa-user-shield"></i>
+                    href: '/moderator/top10',
+                },
 
                 /* {
                     title: 'إضافة علامات عملي',

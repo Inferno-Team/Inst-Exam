@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class StudentCourse extends Model
 {
     use HasFactory;
-    protected $appends = ['this_year_ava', 'this_year_ava_mark1', 'this_year_ava_mark2',];
+    protected $appends = ['this_year_ava', 'this_year_ava_mark1', 'this_year_ava_mark2', 'full_mark'];
     protected $fillable = [
         'student_id',
         'course_id',
@@ -20,6 +20,12 @@ class StudentCourse extends Model
         'mark2',
         'year'
     ];
+    public function fullMark(): Attribute
+    {
+        return new Attribute(
+            get: fn () => $this->mark1 && $this->mark2 ? $this->mark1 + $this->mark2 : 0,
+        );
+    }
     public function thisYearAva(): Attribute
     {
         return new Attribute(

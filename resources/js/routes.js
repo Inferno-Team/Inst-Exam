@@ -16,6 +16,7 @@ import AddMark2Page from './views/moderator_pages/courses/AddMark2Page.vue'
 import AddNewStudentPage from './views/moderator_pages/AddNewStudentPage.vue'
 import MarkRevelRequests from "./views/moderator_pages/MarkRevelRequests.vue"
 import MarkReportPage from './views/moderator_pages/reports/MarkReportPage.vue'
+import TopTenPage from './views/moderator_pages/reports/TopTenPage.vue'
 
 import StudentPage from './views/StudentPage.vue'
 export const routes = [{
@@ -111,7 +112,11 @@ export const routes = [{
                 name:'mark-report',
                 component:MarkReportPage,
                 props:true
-
+            },
+            {
+                path:'top10',
+                name:'top10',
+                component:TopTenPage,
             }
         ]
     },

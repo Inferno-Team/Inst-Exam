@@ -267,4 +267,40 @@ class ModeratorController extends Controller
             "section" => YearSectionModetator::where("section_id", $request->section_year->section_id)->with('moderator')->get(),
         ]);
     }
+    public function getTopTen()
+    {
+        $user = Auth::user();
+        $date = Dates::first();
+        $msy = YearSectionModetator::where('moderator_id', $user->id)->first();
+        $sectionYear = SectionYear::where('section_id', $msy->section_id)
+            ->where('year_id', $msy->year_id)->with('section', 'year')->first();
+        $students = Student::whereHas('statuses', function ($year) use ($sectionYear) {
+            $year->where('section_year_id', $sectionYear->id)->where('last_status', true);
+        })->with(['courses' => function ($course) {
+            $course->whereIn('status', ['راسب', 'ناجح']);
+        }, 'user'])->get()->filter(function ($student) {
+            $courses = $student->courses;
+            return  count($courses->where('status', 'راسب')) == 0;
+        })->values()->map(function ($student) {
+            $full_mark = 0;
+            foreach ($student->courses as $course)
+                $full_mark += $course->full_mark;
+            $student->full_mark = $full_mark / count($student->courses);
+            $student->full_mark = number_format($student->full_mark, 2, '.', '');
+            return (object)[
+                "id" => $student->id,
+                "name" => $student->user->first_name . " " . $student->user->last_name,
+                "univ_id" => $student->univ_id,
+                "full_mark" => $student->full_mark
+            ];
+        })->values()->sortByDesc('full_mark')->values();
+        return LocalResponse::returnData("data", [
+            "top10" => $students,
+            "section" => $sectionYear->section->name,
+            "year" => $sectionYear->year->name,
+            "year_date" => $date->year,
+        ]);
+    }
 }
+
+// [{"id":1,"name":"هدى المساعيد","univ_id":9144,"full_mark":"86.48"},{"id":2,"name":"زاهي الجبارات","univ_id":7053,"full_mark":"85.19"},{"id":3,"name":"علي المحمد","univ_id":2009,"full_mark":"83.48"},{"id":4,"name":"راما سامي","univ_id":9890,"full_mark":79.14},{"id":5,"name":"مصطفى العبود","univ_id":8045,"full_mark":"76.48"},{"id":6,"name":"ريم الاحمد","univ_id":2092,"full_mark":"75.00"},{"id":7,"name":"هدى المساعيد","univ_id":2986,"full_mark":"72.40"},{"id":8,"name":"علي العلي","univ_id":3477,"full_mark":"71.19"},{"id":9,"name":"سامية زينو","univ_id":7864,"full_mark":"70.99"},{"id":10,"name":"زاهي الجبارات","univ_id":9874,"full_mark":"65.19"}]

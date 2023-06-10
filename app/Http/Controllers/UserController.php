@@ -17,7 +17,10 @@ class UserController extends Controller
             $user = User::whereHas("student", fn ($student) => $student->where("univ_id", "=", $request->first_name))->first();
         } else $user = User::where('first_name', "like", $request->first_name)->first();
 
-        info($user);
+        if (!isset($user))
+            return LocalResponse::returnError('البيانات غير متوافقة', 400, [
+                'first_name' => ['حساب غير موجود']
+            ]);
         if (!Hash::check($request->password, $user->password))
             return LocalResponse::returnError('البيانات غير متوافقة', 400, [
                 'password' => ['كملة السر خطأ']

@@ -46,8 +46,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::post('/save-student-mark2', [ModeratorController::class, 'saveStudentMark2']);
         Route::post('/get-students-mark1', [ModeratorController::class, 'getStudentMark1']);
         Route::post('moderator', [ModeratorController::class, 'moderatorAccount']);
-        Route::get("/get-all-requests",[ModeratorController::class, 'getAllRequests']);
-        Route::get("/student-mark-report-data/{id}",[ModeratorController::class,'studentMarkReportData']);
+        Route::get("/get-all-requests", [ModeratorController::class, 'getAllRequests']);
+        Route::get("/student-mark-report-data/{id}", [ModeratorController::class, 'studentMarkReportData']);
+        Route::get('/top-ten', [ModeratorController::class,'getTopTen']);
     });
     Route::group(['middleware' => ['is_student']], function () {
         Route::get('get-my-courses', [\App\Http\Controllers\students\StudentController::class, 'getMyCourses']);
